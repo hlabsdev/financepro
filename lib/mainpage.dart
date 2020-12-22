@@ -1,9 +1,8 @@
-import 'package:finance/mes-transactions.dart';
-import 'package:finance/mon-agent.dart';
-import 'package:finance/my-account.dart';
 import 'package:finance/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'package:flutter/cupertino.dart';
 
 class MainPage extends StatelessWidget {
   // This widget is the root of your application.
@@ -27,26 +26,8 @@ class MainPage extends StatelessWidget {
         child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
-            bottom: TabBar(
-              unselectedLabelColor: Colors.grey,
-              labelColor: Colors.black54,
-              tabs: [
-                Tab(
-                  icon: Icon(Icons.account_balance),
-                  text: 'MyAcount',
-                ),
-                Tab(
-                  icon: Icon(Icons.account_box),
-                  text: 'MyAgent',
-                ),
-                Tab(
-                  icon: Icon(Icons.track_changes),
-                  text: 'Transactions',
-                ),
-              ],
-            ),
             title: Text(
-              'My_ACCOUNT',
+              'MON COMPTE',
               style: GoogleFonts.arya(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -67,11 +48,134 @@ class MainPage extends StatelessWidget {
               ),
             ],
           ),
-          body: TabBarView(
-            children: [
-              MyAccount(),
-              Agent(),
-              Transactions(),
+          drawer: Drawer(
+            elevation: 0,
+            // semanticLabel: "Options",
+            child: ListView(
+              padding: EdgeInsets.only(top: 10),
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    UserAccountsDrawerHeader(
+                      accountName: Text(
+                        "Username",
+                      ),
+                      accountEmail: Text(
+                        "Email",
+                      ),
+                      arrowColor: Colors.green[50],
+                      currentAccountPicture: const CircleAvatar(
+                        child: FlutterLogo(size: 50.0),
+                      ),
+                      otherAccountsPictures: [
+                        CircleAvatar(
+                          child: InkWell(
+                            onTap: () {
+                              var route = new MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    new Profile(),
+                              );
+
+                              Navigator.of(context).push(route);
+                            },
+                            child: Icon(Icons.person),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                ListTile(
+                  title: Text(
+                    "Parametres",
+                  ),
+                  leading: const Icon(Icons.settings),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "Deconnexion",
+                  ),
+                  leading: const Icon(Icons.logout),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: Text(
+                    "Apropos",
+                  ),
+                  leading: const Icon(Icons.question_answer),
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          ),
+          body: CustomScrollView(
+            primary: true,
+            slivers: <Widget>[
+              SliverPadding(
+                padding: const EdgeInsets.all(10),
+                sliver: SliverGrid.count(
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  crossAxisCount: 3,
+                  children: <Widget>[
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text("Mes Comptes"),
+                      color: Colors.green[100],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('Transfert'),
+                      color: Colors.green[200],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('Mes Transactions'),
+                      color: Colors.green[300],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      // decoration: BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadiusGeometry(context)),
+                      child: const Text('Demandes Credits'),
+                      color: Colors.green[400],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('Mon Agent'),
+                      color: Colors.green[500],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('A Propos'),
+                      color: Colors.green[600],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('Parametre'),
+                      color: Colors.green[400],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('Deconnexion'),
+                      color: Colors.green[500],
+                    ),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('Revolution, they...'),
+                      color: Colors.green[600],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

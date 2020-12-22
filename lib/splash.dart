@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:finance/login.dart';
-import 'package:finance/mainpage.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -18,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Timer> loadData() async {
-    return new Timer(Duration(seconds: 8), onDoneLoading);
+    return new Timer(Duration(seconds: 5), onDoneLoading);
   }
 
   onDoneLoading() async {
@@ -33,11 +32,11 @@ class _SplashScreenState extends State<SplashScreen> {
         image: DecorationImage(
             image: AssetImage('images/splash.png'), fit: BoxFit.cover),
       ),
-      child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
-        ),
-      ),
+      // child: Center(
+      //   child: CircularProgressIndicator(
+      //     valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
+      //   ),
+      // ),
     );
   }
 }

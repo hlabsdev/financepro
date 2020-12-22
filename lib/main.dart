@@ -1,4 +1,3 @@
-import 'package:finance/login.dart';
 import 'package:finance/splash.dart';
 import "package:flutter/material.dart";
 

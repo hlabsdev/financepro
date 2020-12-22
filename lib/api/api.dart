@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CallAPi {
-  final String _url = "http://192.168.1.135:8000/api/";
-  // final String _url = "http://flatnyeapi.nunyalabprojets.com/api/";
+  // final String _url = "http://192.168.1.135:8000/api/";
+  final String _url = "http://flatnyeapi.nunyalabprojets.com/api/";
 
   postData(data, apiUrl) async {
     var fulUrl = _url + apiUrl;

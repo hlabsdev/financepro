@@ -1,8 +1,5 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -18,12 +15,11 @@ class _ProfileState extends State<Profile> {
   }
 
   Future<void> _getUserInfo() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var userJson = localStorage.getString("user");
-    var user = json.decode(userJson);
+    // var userJson = localStorage.getString("user");
+    // var user = json.decode(userJson);
 
     setState(() {
-      userData = user;
+      // userData = user;
     });
   }
 

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:finance/api/api.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flushbar/flushbar.dart';
 
 import 'mainpage.dart';
@@ -16,13 +15,16 @@ class _LoginState extends State<Login> {
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   bool _isAllValidate = false;
+  bool _emailEmpty = false;
   bool _emailValidate = false;
+  bool _passwordEmpty = false;
   bool _passwordValidate = false;
 
   bool _isLoading = false;
   var text;
   @override
   void initState() {
+    // ignore: todo
     // TODO: implement initState
     super.initState();
   }
@@ -59,70 +61,117 @@ class _LoginState extends State<Login> {
     }
   }
 
-  void _validate() {
+  String _validateEmail() {
     setState(() {
-      mailController.text.isEmpty
-          ? _emailValidate = true
-          : _emailValidate = false;
+      if (mailController.text == "") {
+        _emailEmpty = true;
+      } else {
+        _emailEmpty = false;
+      }
 
-      passwordController.text.isEmpty
-          ? _passwordValidate = true
-          : _passwordValidate = false;
-      _emailValidate && _passwordValidate
-          ? _isAllValidate = true
-          : _isAllValidate = false;
+      // mailController.text.contains('@')
+      //     ? _emailValidate = true
+      //     : _emailValidate = false;
+      _emailValidate = true;
     });
-    print(mailController.text);
-    print(passwordController.text);
+    var errorMsg;
+    if (_emailEmpty == true) {
+      errorMsg = "Il faut un Email!";
+    } else if (!_emailValidate) {
+      errorMsg = "Saisisez un Email valide";
+    }
+    return errorMsg;
+    // setState(() {
+    //   _emailEmpty = false;
+    //   _emailValidate = false;
+    // });
   }
 
-  void _showError(String errorText) {
-    ScaffoldState sState = Scaffold.of(context);
-    sState.showSnackBar(SnackBar(
-        content: Text(errorText),
-        action: SnackBarAction(
-            label: 'Fermer',
-            onPressed: () {
-              sState.hideCurrentSnackBar();
-            })));
+  String _validatePassword() {
+    setState(() {
+      if (passwordController.text == "") {
+        _passwordEmpty = true;
+      } else {
+        _passwordEmpty = false;
+      }
+
+      // passwordController.text.length <= 4
+      //     ? _passwordValidate = true
+      //     : _passwordValidate = false;
+      _passwordValidate = true;
+    });
+    var errorMesg;
+    if (_passwordEmpty) {
+      errorMesg = "Il faut un Mot de passe!";
+    } else if (!_passwordValidate) {
+      errorMesg = "Saisisez un Email valide!";
+    }
+    return errorMesg;
+
+    // setState(() {
+    //   _passwordEmpty = false;
+    //   _passwordValidate = false;
+    // });
+  }
+
+  void _checkAll() {
+    _isLoading = true;
+
+    setState(() {
+      // _isLoading = true;
+
+      if (!_emailEmpty) {
+        if (_emailValidate) {
+          if (!_passwordEmpty) {
+            if (_passwordValidate) {
+              _isAllValidate = true;
+            }
+          }
+        }
+      } else {
+        _isAllValidate = false;
+      }
+    });
   }
 
   void _handleLogin() async {
-    setState(() {
-      _isLoading = true;
-      // _isBadLogin = false;
-    });
-    _validate();
-    var data = {
-      "email": mailController.text,
-      "password": passwordController.text,
-    };
+    _checkAll();
 
-    // var res = await CallAPi().postData(data, "get_token/");
-    var res = await CallAPi().postData(data, "client/auth");
-    var body = jsonDecode(res.body);
-    if (/* body.toString().isNotEmpty && */ _isAllValidate) {
-      print(body);
-      // if (body["status_code"] == 200) {
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      // localStorage.setString("token", body["token"]);
-      // localStorage.setString("user", body["0"]);
-      var route = new MaterialPageRoute(
-        builder: (BuildContext context) => new MainPage(),
-      );
+    if (!_isAllValidate) {
+      showDismissableFlushbar(context, "Saisie nvalide",
+          "Ressaisissez avec des données valide!", false);
+    } else {
+      var data = {
+        // "email": mailController.text,
+        "uername": mailController.text,
+        "password": passwordController.text,
+      };
 
-      Navigator.of(context).push(route);
-    } else /* if (body.toString().isEmpty) */ {
-      // setState(() {
-      //   _isBadLogin = true;
-      // });
-      print("bad credentials");
-      // _isBadLogin = true;
+      var res = await CallAPi().postData(data, "get_token/");
+      // var res = await CallAPi().postData(data, "client/auth");
+      var body = json.decode(res.body);
+
+      if (body.toString().isNotEmpty) {
+        // if (body["status_code"] == 200) {
+        print(body);
+
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString("token", body["token"]);
+        // localStorage.setString("user", body["0"]);
+        var route = new MaterialPageRoute(
+          builder: (BuildContext context) => new MainPage(),
+        );
+
+        Navigator.of(context).push(route);
+      } else /* if (body.toString().isEmpty) */ {
+        showDismissableFlushbar(context, "Donnée incorrect",
+            "Email ou mot de passe incorrect. Reessayez!", false);
+      }
     }
 
     setState(() {
-      _isLoading = false;
-      // _isBadLogin = false;
+      // _isLoading = false;
+      _isAllValidate = false;
     });
   }
 
@@ -174,7 +223,7 @@ class _LoginState extends State<Login> {
                           Icons.mail,
                           color: Colors.grey,
                         ),
-                        errorText: _emailValidate ? "il faut un email!" : null,
+                        errorText: _isLoading ? _validateEmail() : null,
                         errorStyle: TextStyle(
                           textBaseline: TextBaseline.ideographic,
                         )),
@@ -192,8 +241,7 @@ class _LoginState extends State<Login> {
                         Icons.lock,
                         color: Colors.grey,
                       ),
-                      errorText:
-                          _passwordValidate ? "il faut un mot de passe!" : null,
+                      errorText: _isLoading ? _validatePassword() : null,
                     ),
                   ),
                 ),
@@ -218,10 +266,7 @@ class _LoginState extends State<Login> {
                           borderRadius: BorderRadius.circular(15)),
                       child: Text('Login'),
                       onPressed: () {
-                        _isAllValidate
-                            ? _handleLogin()
-                            : showDismissableFlushbar(context, "Saisie nvalide",
-                                "Ressaisissez tout", true);
+                        _handleLogin();
                       },
                     )),
                 SizedBox(
