@@ -1,5 +1,4 @@
-# Finance App UI Template Made In Flutter
- Finance App UI Template Made In Flutter For Android & iOS
+# Finance App Made In Flutter
 
 # Packages 
 google_fonts:
@@ -8,6 +7,13 @@ dotted_line:
 
 circle_list: ^1.0.4
 
-# Screenshots
+cupertino_icons: ^1.0.0
 
-<img src="https://github.com/stevie1mat/Finance-App-UI-Template-Made-In-Flutter/blob/main/ss.png">
+theme_mode_handler: ^2.0.0
+
+shared_preferences: ^0.5.12+4
+
+flushbar: ^1.10.4
+
+
+# Screenshots
