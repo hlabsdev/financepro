@@ -120,7 +120,7 @@ class _ProfileState extends State<Profile> {
                                     //background color of box
                                     BoxShadow(
                                       color: Colors.blue[200],
-                                      blurRadius: 6.0, // soften the shadow
+                                      blurRadius: 3.0, // soften the shadow
                                       spreadRadius: 0.0, //extend the shadow
                                       offset: Offset(
                                         0.0, // Move to right 10  horizontally
