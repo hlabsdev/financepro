@@ -1,3 +1,4 @@
+import 'package:finance/my-account.dart';
 import 'package:finance/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -80,7 +81,9 @@ class MainPage extends StatelessWidget {
 
                               Navigator.of(context).push(route);
                             },
-                            child: Icon(Icons.person),
+                            child: Icon(
+                              Icons.person,
+                            ),
                           ),
                         )
                       ],
@@ -125,12 +128,42 @@ class MainPage extends StatelessWidget {
                 sliver: SliverGrid.count(
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 10,
-                  crossAxisCount: 3,
+                  crossAxisCount: 2,
                   children: <Widget>[
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text("Mes Comptes"),
-                      color: Colors.green[100],
+                    Card(
+                      color: Colors.grey,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Container(
+                            child: InkWell(
+                              child: Icon(
+                                Icons.account_balance_wallet,
+                                color: Colors.green[200],
+                                size: 70,
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyAccount()),
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            "Mes Comptes",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
                     ),
                     Container(
                       padding: const EdgeInsets.all(8),

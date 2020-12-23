@@ -1,6 +1,6 @@
-import 'package:flutter/gestures.dart';
+import 'package:finance/mes-transactions.dart';
+import 'package:finance/mon-agent.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 class MyAccount extends StatefulWidget {
   @override
@@ -10,8 +10,31 @@ class MyAccount extends StatefulWidget {
 class _MyAccountState extends State<MyAccount> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Mes comptes"),
+        bottom: TabBar(
+          unselectedLabelColor: Colors.grey,
+          labelColor: Colors.black54,
+          tabs: [
+            Tab(
+              icon: Icon(Icons.account_balance),
+              text: 'Compte Tontine',
+            ),
+            Tab(
+              icon: Icon(Icons.account_box),
+              text: 'Compte Epargne',
+            ),
+          ],
+        ),
+      ),
+      body: TabBarView(
+        children: [
+          Agent(),
+          Transactions(),
+        ],
+      ),
+      /* body: Column(
         children: [
           SizedBox(height: 10),
           /*Row(
@@ -136,7 +159,7 @@ class _MyAccountState extends State<MyAccount> {
             ),
           ),
         ],
-      ),
+      ), */
     );
   }
 }
