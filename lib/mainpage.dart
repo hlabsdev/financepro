@@ -1,12 +1,39 @@
-import 'package:finance/my-account.dart';
-import 'package:finance/profile.dart';
+import 'dart:convert';
+
+import 'package:finance/menu-pages/mes-transactions.dart';
+import 'package:finance/menu-pages/mon-agent.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:flutter/cupertino.dart';
+import 'package:finance/menu-pages/comptes/my-accounts.dart';
+import 'package:finance/profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MainPage extends StatelessWidget {
-  // This widget is the root of your application.
+class MainPage extends StatefulWidget {
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  var userData;
+
+  @override
+  void initState() {
+    _getUserInfo();
+    super.initState();
+  }
+
+  void _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString("client");
+    var user = json.decode(userJson);
+
+    setState(() {
+      userData = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,11 +44,6 @@ class MainPage extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       darkTheme: ThemeData.dark(),
-      //darkTheme: ThemeData(
-      //brightness: Brightness.dark,
-      //primarySwatch: Colors.black,
-      //visualDensity: VisualDensity.adaptivePlatformDensity,
-      //),
       home: DefaultTabController(
         length: 3,
         child: Scaffold(
@@ -61,32 +83,35 @@ class MainPage extends StatelessWidget {
                   children: [
                     UserAccountsDrawerHeader(
                       accountName: Text(
-                        "Username",
+                        userData != null
+                            ? '${userData["fname"]}' +
+                                " " +
+                                '${userData["lname"]}'
+                            : "",
                       ),
+                      onDetailsPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Profile()),
+                        );
+                      },
                       accountEmail: Text(
-                        "Email",
+                        '${userData["email"]}',
                       ),
                       arrowColor: Colors.green[50],
-                      currentAccountPicture: const CircleAvatar(
-                        child: FlutterLogo(size: 50.0),
-                      ),
-                      otherAccountsPictures: [
-                        CircleAvatar(
-                          child: InkWell(
-                            onTap: () {
-                              var route = new MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    new Profile(),
-                              );
-
-                              Navigator.of(context).push(route);
-                            },
-                            child: Icon(
-                              Icons.person,
-                            ),
-                          ),
-                        )
-                      ],
+                      currentAccountPicture:
+                          userData["profile_photo_url"] != null
+                              ? CircleAvatar(
+                                  child: Image.network(
+                                    '${userData["profile_photo_url"]}',
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.fill,
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  child: FlutterLogo(size: 50.0),
+                                ),
                     ),
                   ],
                 ),
@@ -120,98 +145,171 @@ class MainPage extends StatelessWidget {
               ],
             ),
           ),
-          body: CustomScrollView(
-            primary: true,
-            slivers: <Widget>[
-              SliverPadding(
-                padding: const EdgeInsets.all(10),
-                sliver: SliverGrid.count(
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                  crossAxisCount: 2,
-                  children: <Widget>[
-                    Card(
-                      color: Colors.grey,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            child: InkWell(
-                              child: Icon(
-                                Icons.account_balance_wallet,
-                                color: Colors.green[200],
-                                size: 70,
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyAccount()),
-                                );
-                              },
-                            ),
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            "Mes Comptes",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
+          body: SizedBox(
+            // height: MediaQuery.of(context).size.height - 90,
+            child: CustomScrollView(
+              primary: true,
+              slivers: <Widget>[
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                      left: 5, right: 5, top: 8, bottom: 8),
+                  sliver: SliverGrid.count(
+                    // crossAxisSpacing: 2,
+                    // mainAxisSpacing: 2,
+                    crossAxisCount: 2,
+                    children: <Widget>[
+                      MenuCard(
+                        title: Text(
+                          "Mes Comptes",
+                          style: GoogleFonts.cairo(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        cardColor: Colors.deepPurple[300],
+                        icon: Icon(
+                          Icons.account_balance_wallet,
+                          color: Colors.yellow[200],
+                          size: 70,
+                        ),
+                        routePage: MyAccounts(),
                       ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text('Transfert'),
-                      color: Colors.green[200],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text('Mes Transactions'),
-                      color: Colors.green[300],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      // decoration: BoxDecoration(shape: BoxShape.rectangle, borderRadius: BorderRadiusGeometry(context)),
-                      child: const Text('Demandes Credits'),
-                      color: Colors.green[400],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text('Mon Agent'),
-                      color: Colors.green[500],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text('A Propos'),
-                      color: Colors.green[600],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text('Parametre'),
-                      color: Colors.green[400],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text('Deconnexion'),
-                      color: Colors.green[500],
-                    ),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const Text('Revolution, they...'),
-                      color: Colors.green[600],
-                    ),
-                  ],
+                      MenuCard(
+                        title: Text(
+                          "Transfert",
+                          style: GoogleFonts.cairo(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        cardColor: Colors.deepPurple[300],
+                        icon: Icon(
+                          Icons.send_to_mobile,
+                          color: Colors.yellow[200],
+                          size: 70,
+                        ),
+                        routePage: MyAccounts(),
+                      ),
+                      MenuCard(
+                        title: Text(
+                          "Mes Transactions",
+                          style: GoogleFonts.cairo(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        cardColor: Colors.deepPurple[300],
+                        icon: Icon(
+                          Icons.transfer_within_a_station,
+                          color: Colors.yellow[200],
+                          size: 70,
+                        ),
+                        routePage: MyTransactions(),
+                      ),
+                      MenuCard(
+                        title: Text(
+                          "Demandes Credits",
+                          style: GoogleFonts.cairo(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        cardColor: Colors.deepPurple[300],
+                        icon: Icon(
+                          Icons.credit_card_rounded,
+                          color: Colors.yellow[200],
+                          size: 70,
+                        ),
+                        routePage: MyAccounts(),
+                      ),
+                      MenuCard(
+                        title: Text(
+                          "Mon Agent",
+                          style: GoogleFonts.cairo(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        cardColor: Colors.deepPurple[300],
+                        icon: Icon(
+                          Icons.support_agent_rounded,
+                          color: Colors.yellow[200],
+                          size: 70,
+                        ),
+                        routePage: MyAgent(),
+                      ),
+                      MenuCard(
+                        title: Text(
+                          "Rendez-Vous",
+                          style: GoogleFonts.cairo(
+                              color: Colors.white70,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        cardColor: Colors.deepPurple[300],
+                        icon: Icon(
+                          Icons.access_time,
+                          color: Colors.yellow[200],
+                          size: 70,
+                        ),
+                        routePage: MyAccounts(),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class MenuCard extends StatelessWidget {
+  final Text title;
+  final Icon icon;
+  final Color cardColor;
+  final Widget routePage;
+
+  const MenuCard({
+    Key key,
+    this.title,
+    this.icon,
+    this.cardColor,
+    this.routePage,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: cardColor,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 15,
+          ),
+          Container(
+            child: InkWell(
+              child: icon,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => routePage),
+                );
+              },
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          title,
+        ],
       ),
     );
   }

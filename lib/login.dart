@@ -21,14 +21,132 @@ class _LoginState extends State<Login> {
   bool _passwordValidate = false;
 
   bool _isLoading = false;
-  var text;
+
   @override
   void initState() {
-    // ignore: todo
-    // TODO: implement initState
+    // _isAllValidate = false;
+    // _emailEmpty = false;
+    // _emailValidate = false;
+    // _passwordEmpty = false;
+    // _passwordValidate = false;
+    // _isLoading = false;
     super.initState();
   }
 
+  String _validateEmail() {
+    setState(() {
+      _emailEmpty = mailController.text.isEmpty ? true : false;
+
+      // mailController.text.contains('@')
+      //     ? _emailValidate = true
+      //     : _emailValidate = false;
+      _emailValidate = true;
+    });
+    var errorMsg;
+    if (_emailEmpty) {
+      errorMsg = "Il faut un Email!";
+    } else if (!_emailValidate) {
+      errorMsg = "Saisisez un Email valide";
+    }
+    return errorMsg;
+  }
+
+  String _validatePassword() {
+    setState(() {
+      _passwordEmpty = passwordController.text.isEmpty ? true : false;
+
+      // passwordController.text.length <= 4
+      //     ? _passwordValidate = true
+      //     : _passwordValidate = false;
+      _passwordValidate = true;
+    });
+    var errorMesg;
+    if (_passwordEmpty) {
+      errorMesg = "Il faut un Mot de passe!";
+    } else if (!_passwordValidate) {
+      errorMesg = "Saisisez un Email valide!";
+    }
+    return errorMesg;
+  }
+
+  void _handleLogin() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MainPage()));
+  }
+
+/* 
+  void _handleLogin() async {
+    setState(() {
+      if (!_emailEmpty) {
+        if (_emailValidate) {
+          if (!_passwordEmpty) {
+            if (_passwordValidate) {
+              _isAllValidate = true;
+            }
+          }
+        }
+      } else {
+        _isAllValidate = false;
+      }
+    });
+
+    if (!_isAllValidate) {
+      showDismissableFlushbar(context, "Saisie invalide",
+          "Ressaisissez avec des données valide!", false);
+    } else {
+      setState(() {
+        _isLoading = true;
+      });
+      var data = {
+        "email": mailController.text,
+        // "username": mailController.text,
+        "password": passwordController.text,
+      };
+      // var res = await CallAPi().postData(data, "get_token/");
+      var res = await CallAPi().postData(data, "client/auth");
+      // var status = json.decode(res.status);
+      var body = json.decode(res.body);
+
+      if (body.toString().contains("token")) {
+        // if (body["status_code"] == 200) {
+        print(body);
+
+        SharedPreferences localStorage = await SharedPreferences.getInstance();
+        localStorage.setString("token", body["token"]);
+        localStorage.setString("client", json.encode(body["client"]));
+        var route = new MaterialPageRoute(
+          builder: (BuildContext context) => MainPage(),
+        );
+        Navigator.of(context).push(route);
+      } else /* if (body["error_status"] == 400) */ {
+        showDismissableFlushbar(
+            context,
+            "Une erreur s'est produite",
+            "Données invalide, ou mauvaise connexion. Veuillez reessayer avec des données correct ou avec un meilleure connexion",
+            true);
+      }
+      /*  else if (status == 500) {
+        showDismissableFlushbar(
+            context,
+            "Une erreur s'est produite",
+            "Le serveur ne repond pas, Veuillez reessayer dans quelques instants!",
+            false);
+      } else if (status == 0) {
+        showDismissableFlushbar(
+            context,
+            "Erreur de connexion",
+            "Il semble que vous n'etes pas connecté ou que votre connexion est mauvaise.",
+            false);
+      } */
+    }
+    setState(() {
+      _isLoading = false;
+      _isAllValidate = false;
+
+      // dispose();
+    });
+  }
+ */
   void showDismissableFlushbar(BuildContext context, String errorTitle,
       String errorText, bool eraseCases) {
     Flushbar(
@@ -61,218 +179,114 @@ class _LoginState extends State<Login> {
     }
   }
 
-  String _validateEmail() {
-    setState(() {
-      if (mailController.text == "") {
-        _emailEmpty = true;
-      } else {
-        _emailEmpty = false;
-      }
-
-      // mailController.text.contains('@')
-      //     ? _emailValidate = true
-      //     : _emailValidate = false;
-      _emailValidate = true;
-    });
-    var errorMsg;
-    if (_emailEmpty == true) {
-      errorMsg = "Il faut un Email!";
-    } else if (!_emailValidate) {
-      errorMsg = "Saisisez un Email valide";
-    }
-    return errorMsg;
-    // setState(() {
-    //   _emailEmpty = false;
-    //   _emailValidate = false;
-    // });
-  }
-
-  String _validatePassword() {
-    setState(() {
-      if (passwordController.text == "") {
-        _passwordEmpty = true;
-      } else {
-        _passwordEmpty = false;
-      }
-
-      // passwordController.text.length <= 4
-      //     ? _passwordValidate = true
-      //     : _passwordValidate = false;
-      _passwordValidate = true;
-    });
-    var errorMesg;
-    if (_passwordEmpty) {
-      errorMesg = "Il faut un Mot de passe!";
-    } else if (!_passwordValidate) {
-      errorMesg = "Saisisez un Email valide!";
-    }
-    return errorMesg;
-
-    // setState(() {
-    //   _passwordEmpty = false;
-    //   _passwordValidate = false;
-    // });
-  }
-
-  void _checkAll() {
-    _isLoading = true;
-
-    setState(() {
-      // _isLoading = true;
-
-      if (!_emailEmpty) {
-        if (_emailValidate) {
-          if (!_passwordEmpty) {
-            if (_passwordValidate) {
-              _isAllValidate = true;
-            }
-          }
-        }
-      } else {
-        _isAllValidate = false;
-      }
-    });
-  }
-
-  void _handleLogin() async {
-    _checkAll();
-
-    if (!_isAllValidate) {
-      showDismissableFlushbar(context, "Saisie nvalide",
-          "Ressaisissez avec des données valide!", false);
-    } else {
-      var data = {
-        // "email": mailController.text,
-        "uername": mailController.text,
-        "password": passwordController.text,
-      };
-
-      var res = await CallAPi().postData(data, "get_token/");
-      // var res = await CallAPi().postData(data, "client/auth");
-      var body = json.decode(res.body);
-
-      if (body.toString().isNotEmpty) {
-        // if (body["status_code"] == 200) {
-        print(body);
-
-        SharedPreferences localStorage = await SharedPreferences.getInstance();
-        localStorage.setString("token", body["token"]);
-        // localStorage.setString("user", body["0"]);
-        var route = new MaterialPageRoute(
-          builder: (BuildContext context) => new MainPage(),
-        );
-
-        Navigator.of(context).push(route);
-      } else /* if (body.toString().isEmpty) */ {
-        showDismissableFlushbar(context, "Donnée incorrect",
-            "Email ou mot de passe incorrect. Reessayez!", false);
-      }
-    }
-
-    setState(() {
-      // _isLoading = false;
-      _isAllValidate = false;
-    });
-  }
-
   @override
   void dispose() {
     mailController.dispose();
     passwordController.dispose();
+    // _isAllValidate = false;
+    // _emailEmpty = false;
+    // _emailValidate = false;
+    // _passwordEmpty = false;
+    // _passwordValidate = false;
+    // _isLoading = false;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-            padding: EdgeInsets.all(10),
-            child: ListView(
-              children: <Widget>[
-                SizedBox(
-                  height: 50,
-                ),
-                Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      "Un Logo ici",
-                      style: TextStyle(
-                        color: Colors.teal,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 30,
-                      ),
-                    )),
-                Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      _isLoading ? "Connection..." : 'Connectez-vous',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    )),
-                Container(
+        body: Center(
+      child: Padding(
+          padding: EdgeInsets.all(10),
+          child: ListView(
+            children: <Widget>[
+              SizedBox(
+                height: 50,
+              ),
+              Container(
+                  alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: mailController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Email",
-                        icon: Icon(
-                          Icons.mail,
-                          color: Colors.grey,
-                        ),
-                        errorText: _isLoading ? _validateEmail() : null,
-                        errorStyle: TextStyle(
-                          textBaseline: TextBaseline.ideographic,
-                        )),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: TextField(
-                    obscureText: true,
-                    controller: passwordController,
-                    decoration: InputDecoration(
+                  child: Text(
+                    "Un Logo ici",
+                    style: TextStyle(
+                      color: Colors.teal,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 30,
+                    ),
+                  )),
+              Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    _isLoading ? "Connection..." : 'Connectez-vous',
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  )),
+              Container(
+                padding: EdgeInsets.all(10),
+                child: TextField(
+                  controller: mailController,
+                  decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: "Mot de Passe",
+                      labelText: "Email",
                       icon: Icon(
-                        Icons.lock,
+                        Icons.mail,
                         color: Colors.grey,
                       ),
-                      errorText: _isLoading ? _validatePassword() : null,
+                      errorText: _validateEmail(),
+                      // errorText: _isLoading ? _validateEmail() : null,
+                      errorStyle: TextStyle(
+                        textBaseline: TextBaseline.ideographic,
+                      )),
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: TextField(
+                  obscureText: true,
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: "Mot de Passe",
+                    icon: Icon(
+                      Icons.lock,
+                      color: Colors.grey,
                     ),
+                    // errorText: _isLoading ? _validatePassword() : null,
+                    errorText: _validatePassword(),
                   ),
                 ),
-                FlatButton(
-                  onPressed: () {
-                    //forgot password screen
-                  },
-                  textColor: Colors.teal,
-                  child: Text("Vous avez oublié le mot de passe ?"),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Container(
-                    height: 50,
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Text('Login'),
-                      onPressed: () {
-                        _handleLogin();
-                      },
-                    )),
-                SizedBox(
-                  height: 8,
-                ),
-              ],
-            )));
+              ),
+              FlatButton(
+                onPressed: () {
+                  //forgot password screen
+                },
+                textColor: Colors.teal,
+                child: Text("Vous avez oublié le mot de passe ?"),
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              Container(
+                  height: 50,
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  child: RaisedButton(
+                    textColor: Colors.white,
+                    color: Theme.of(context).primaryColor,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Text('Login'),
+                    onPressed: () {
+                      _handleLogin();
+                    },
+                  )),
+              SizedBox(
+                height: 8,
+              ),
+            ],
+          )),
+    ));
   }
 }

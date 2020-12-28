@@ -1,8 +1,8 @@
-import 'package:finance/mes-transactions.dart';
-import 'package:finance/mon-agent.dart';
+import 'package:finance/menu-pages/mes-transactions.dart';
+import 'package:finance/menu-pages/mon-agent.dart';
 import 'package:flutter/material.dart';
 
-import 'my-account.dart';
+import 'menu-pages/comptes/my-accounts.dart';
 
 // class Utils(){
 
@@ -45,9 +45,9 @@ class TabLister extends StatelessWidget {
   Widget build(BuildContext context) {
     return TabBarView(
       children: [
-        MyAccount(),
-        Agent(),
-        Transactions(),
+        MyAccounts(),
+        MyAgent(),
+        MyTransactions(),
       ],
     );
   }

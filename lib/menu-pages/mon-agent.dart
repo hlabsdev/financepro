@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Agent extends StatefulWidget {
+class MyAgent extends StatefulWidget {
   @override
-  _AgentState createState() => _AgentState();
+  _MyAgentState createState() => _MyAgentState();
 }
 
-class _AgentState extends State<Agent> {
+class _MyAgentState extends State<MyAgent> {
   @override
   Widget build(BuildContext context) {
     return Container();

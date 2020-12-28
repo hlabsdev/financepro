@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:finance/login.dart';
+import 'package:finance/mainpage.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -21,8 +23,24 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   onDoneLoading() async {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => Login()));
+    SharedPreferences localData = await SharedPreferences.getInstance();
+    localData.containsKey("token")
+        ? Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => MainPage()))
+        : Navigator.of(context)
+            .push(MaterialPageRoute(builder: (context) => Login()));
+    dispose();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void deactivate() {
+    dispose();
+    super.deactivate();
   }
 
   @override

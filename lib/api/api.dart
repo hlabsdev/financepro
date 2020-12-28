@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CallAPi {
-  // final String _url = "http://192.168.1.135:8000/api/";
-  final String _url = "http://flatnyeapi.nunyalabprojets.com/api/";
+  final String _url = "http://192.168.1.67:8000/api/";
+  // final String _url = "http://flatnyeapi.nunyalabprojets.com/api/";
 
   postData(data, apiUrl) async {
     var fulUrl = _url + apiUrl;
@@ -16,7 +16,7 @@ class CallAPi {
     );
   }
 
-  getData(data, apiUrl) async {
+  getData(apiUrl) async {
     var fulUrl = _url + apiUrl;
     return await http.get(
       fulUrl,
@@ -26,6 +26,6 @@ class CallAPi {
 
   _setHeaders() => {
         'Content-type': 'application/json',
-        // 'Accept': 'application/json',
+        'Accept': 'application/json',
       };
 }
