@@ -10,23 +10,24 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-//   var userData;
-//   SharedPreferences localStorage;
+  var userData;
+  // SharedPreferences localStorage = await SharedPreferences.getInstance();
 
-//   @override
-//   void initState() {
-//     _getUserInfo();
-//     super.initState();
-//   }
+  @override
+  void initState() {
+    _getUserInfo();
+    super.initState();
+  }
 
-//   Future<void> _getUserInfo() async {
-//     var userJson = localStorage.getString("user");
-//     var user = json.decode(userJson);
+  Future<void> _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString("client");
+    var user = json.decode(userJson);
 
-//     setState(() {
-//       userData = user;
-//     });
-//   }
+    setState(() {
+      userData = user;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,10 +98,12 @@ class _ProfileState extends State<Profile> {
                         height: MediaQuery.of(context).size.height / 70,
                       ),
                       Text(
-                        'Hermann HLabs',
+                        userData != null
+                            ? 'Nom: ${userData["fname"]} ${userData["lname"]}'
+                            : 'Nom: ...',
                         style: GoogleFonts.cinzel(
-                            color: Colors.grey[900],
-                            fontSize: 20,
+                            color: Colors.white60,
+                            fontSize: 18,
                             fontWeight: FontWeight.normal),
                       ),
                       SizedBox(
@@ -138,7 +141,7 @@ class _ProfileState extends State<Profile> {
                                   padding: const EdgeInsets.only(
                                       left: 22, right: 22, top: 12, bottom: 12),
                                   child: Text(
-                                    'Cotisations',
+                                    'Modifier le profil',
                                     style: GoogleFonts.lato(
                                         color: Colors.white,
                                         letterSpacing: 1,
@@ -155,7 +158,33 @@ class _ProfileState extends State<Profile> {
                     ],
                   ))),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 8),
+            Card(
+              elevation: 5,
+              // margin: EdgeInsets.only(top: 8, bottom: 8),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 8.0, right: 8, top: 5, bottom: 5),
+                child: Column(
+                  children: [
+                    Text(
+                      userData != null
+                          ? 'Email: ${userData["email"]}'
+                          : 'Email: ...',
+                      style: GoogleFonts.cinzel(
+                          fontSize: 20, fontWeight: FontWeight.normal),
+                    ),
+                    Text(
+                      userData != null
+                          ? 'Contact: ${userData["phone"]}'
+                          : 'Contact: ...',
+                      style: GoogleFonts.cinzel(
+                          fontSize: 20, fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

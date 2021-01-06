@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/menu-pages/demande-credit.dart';
 import 'package:finance/menu-pages/mes-transactions.dart';
 import 'package:finance/menu-pages/mon-agent.dart';
 import 'package:flutter/cupertino.dart';
@@ -153,7 +154,7 @@ class _MainPageState extends State<MainPage> {
                       title: Text(
                         "Mes Comptes",
                         style: GoogleFonts.cairo(
-                            color: Colors.white70,
+                            color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -170,7 +171,7 @@ class _MainPageState extends State<MainPage> {
                       title: Text(
                         "Transfert",
                         style: GoogleFonts.cairo(
-                            color: Colors.white70,
+                            color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -187,7 +188,7 @@ class _MainPageState extends State<MainPage> {
                       title: Text(
                         "Mes Transactions",
                         style: GoogleFonts.cairo(
-                            color: Colors.white70,
+                            color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
@@ -204,7 +205,7 @@ class _MainPageState extends State<MainPage> {
                       title: Text(
                         "Demandes Credits",
                         style: GoogleFonts.cairo(
-                            color: Colors.white70,
+                            color: Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold),
                       ),
@@ -214,7 +215,7 @@ class _MainPageState extends State<MainPage> {
                         color: Colors.yellow[200],
                         size: 70,
                       ),
-                      routePage: MyAccounts(),
+                      routePage: DemandeCredit(),
                     ),
                     MenuCard(
                       title: Text(
