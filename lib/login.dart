@@ -179,6 +179,22 @@ class _LoginState extends State<Login> {
     }
   }
 
+  ScaffoldState scaffoldState;
+
+  // ignore: unused_element
+  _showMsg(msg) {
+    final snackBar = SnackBar(
+      content: Text(msg),
+      action: SnackBarAction(
+        label: "Fermer",
+        onPressed: () {
+          //someting
+        },
+      ),
+    );
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
   @override
   void dispose() {
     mailController.dispose();

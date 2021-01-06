@@ -167,7 +167,7 @@ class _MainPageState extends State<MainPage> {
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                        cardColor: Colors.deepPurple[300],
+                        cardColor: Colors.deepPurple,
                         icon: Icon(
                           Icons.account_balance_wallet,
                           color: Colors.yellow[200],
@@ -184,7 +184,7 @@ class _MainPageState extends State<MainPage> {
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                        cardColor: Colors.deepPurple[300],
+                        cardColor: Colors.deepPurple,
                         icon: Icon(
                           Icons.send_to_mobile,
                           color: Colors.yellow[200],
@@ -201,7 +201,7 @@ class _MainPageState extends State<MainPage> {
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                        cardColor: Colors.deepPurple[300],
+                        cardColor: Colors.deepPurple,
                         icon: Icon(
                           Icons.transfer_within_a_station,
                           color: Colors.yellow[200],
@@ -217,7 +217,7 @@ class _MainPageState extends State<MainPage> {
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                         ),
-                        cardColor: Colors.deepPurple[300],
+                        cardColor: Colors.deepPurple,
                         icon: Icon(
                           Icons.credit_card_rounded,
                           color: Colors.yellow[200],
@@ -234,7 +234,8 @@ class _MainPageState extends State<MainPage> {
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                        cardColor: Colors.deepPurple[300],
+                        // cardColor: Colors.deepPurple,
+                        cardColor: Colors.white10,
                         icon: Icon(
                           Icons.support_agent_rounded,
                           color: Colors.yellow[200],
@@ -246,15 +247,15 @@ class _MainPageState extends State<MainPage> {
                         title: Text(
                           "Rendez-Vous",
                           style: GoogleFonts.cairo(
-                              color: Colors.white70,
+                              color: Colors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.bold),
                           textAlign: TextAlign.center,
                         ),
-                        cardColor: Colors.deepPurple[300],
+                        cardColor: Colors.black,
                         icon: Icon(
                           Icons.access_time,
-                          color: Colors.yellow[200],
+                          color: Colors.red[200],
                           size: 70,
                         ),
                         routePage: MyAccounts(),
