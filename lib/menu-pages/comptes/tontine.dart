@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:finance/menu-pages/mes-transactions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -30,23 +32,21 @@ class _TontineState extends State<Tontine> {
   @override
   Widget build(BuildContext context) {
     return Container(
+        child: SingleChildScrollView(
       child: Column(
         children: [
           SizedBox(height: 8),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 60.0),
-                child: Text(
-                  'Informations du compte',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.cinzel(
-                      color: Colors.grey[700],
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
+              Text(
+                'Informations du compte',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.cinzel(
+                    color: Colors.grey[700],
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -66,26 +66,13 @@ class _TontineState extends State<Tontine> {
                         padding: EdgeInsets.only(top: 10, left: 10),
                         // child: Text("N°de compte: ${tontine['accId']}"),
                         child: Text(
-                          "Compte N°: T309",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 10, left: 6, right: 6),
-                        child: Text(
-                          "|",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
-                        ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 10, right: 10),
-                        // child: Text("N°de compte: ${tontine['accId']}"),
-                        child: Text(
-                          "Crée le: 22/09/2020",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold),
+                          tontine != null
+                              ? 'Compte ${tontine["acc_num"]}'
+                              : "Compte TONT000",
+                          style: GoogleFonts.cinzel(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
@@ -119,16 +106,49 @@ class _TontineState extends State<Tontine> {
                     subtitle: Text(
                       tontine != null
                           ? '${tontine["balance"]} FCFA'
-                          : '200000 FCFA',
-                      // '${tontine["balance"]}',
+                          : '... FCFA',
                       style: GoogleFonts.lato(
                           color: Colors.grey[600],
                           fontSize: 15,
                           fontWeight: FontWeight.normal),
                     ),
-                    // isThreeLine: true,
+                    trailing: InkWell(
+                      onTap: () {
+                        _showDialog();
+                      },
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.blue[800],
+                            borderRadius: BorderRadius.circular(40),
+                            boxShadow: [
+                              //background color of box
+                              BoxShadow(
+                                color: Colors.blue[200],
+                                blurRadius: 3.0, // soften the shadow
+                                spreadRadius: 2.0, //extend the shadow
+                                offset: Offset(
+                                  0.0, // Move to right 10  horizontally
+                                  2.0, // Move to bottom 10 Vertically
+                                ),
+                              )
+                            ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                left: 15, right: 15, top: 10, bottom: 10),
+                            child: Text(
+                              'Cotiser',
+                              style: GoogleFonts.lato(
+                                  color: Colors.white,
+                                  letterSpacing: 1,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          )),
+                    ),
+                    /*  */
                   ),
-                  new ListTile(
+                  ListTile(
                     leading: Container(
                       height: 30,
                       width: 30,
@@ -144,7 +164,7 @@ class _TontineState extends State<Tontine> {
                       ),
                     ),
                     title: Text(
-                      'Derniere cotisation le ',
+                      'Derniere cotisation ',
                       style: GoogleFonts.cinzel(
                           color: Colors.black,
                           letterSpacing: 0,
@@ -152,7 +172,7 @@ class _TontineState extends State<Tontine> {
                           fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      '17 Dec, 2020',
+                      'Le 17 Dec, 2020',
                       style: GoogleFonts.lato(
                           color: Colors.grey[600],
                           fontSize: 13,
@@ -167,16 +187,55 @@ class _TontineState extends State<Tontine> {
                           fontStyle: FontStyle.italic),
                     ),
                   ),
+                  ListTile(
+                    leading: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: const Radius.circular(5.0),
+                          bottomRight: const Radius.circular(5.0),
+                          topLeft: const Radius.circular(5.0),
+                          topRight: const Radius.circular(5.0),
+                        ),
+                        image: DecorationImage(
+                            image: AssetImage('images/retrait.png')),
+                      ),
+                    ),
+                    title: Text(
+                      'Dernier retrait ',
+                      style: GoogleFonts.cinzel(
+                          color: Colors.black,
+                          letterSpacing: 0,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      'Le 25 Dec, 2020',
+                      style: GoogleFonts.lato(
+                          color: Colors.grey[600],
+                          fontSize: 13,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    trailing: Text(
+                      '25000 FCFA',
+                      style: GoogleFonts.lato(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
           // SizedBox(height: 10),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 70.0, top: 6),
+                padding: const EdgeInsets.only(top: 15),
                 child: Text(
                   'Operations Recentes',
                   textAlign: TextAlign.center,
@@ -373,8 +432,75 @@ class _TontineState extends State<Tontine> {
                       fontStyle: FontStyle.italic)),
             ),
           ),
+
+          SizedBox(
+            height: 30,
+          ),
         ],
       ),
+    ));
+  }
+
+  void _showDialog() {
+    // flutter defined function
+    TextEditingController sommeController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text("Effectuez votre cotisation"),
+          content: SizedBox(
+            height: 130,
+            child: Column(
+              children: [
+                Container(
+                  // padding: EdgeInsets.all(6),
+                  child: TextField(
+                    controller: sommeController,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
+                    decoration: InputDecoration(
+                        // border: OutlineInputBorder(),
+                        border: UnderlineInputBorder(),
+                        labelText: "Montant",
+                        // errorText: _isLoading ? _validateEmail() : null,
+                        errorStyle: TextStyle(
+                          textBaseline: TextBaseline.ideographic,
+                        )),
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Container(
+                    child: RaisedButton(
+                  textColor: Colors.white,
+                  color: Theme.of(context).primaryColor,
+                  elevation: 0,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Text('Valider'),
+                  onPressed: () {
+                    launchUssd("*101#");
+                  },
+                )),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

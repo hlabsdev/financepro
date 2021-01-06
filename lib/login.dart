@@ -69,12 +69,12 @@ class _LoginState extends State<Login> {
     return errorMesg;
   }
 
-  void _handleLogin() {
+/*   void _handleLogin() {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => MainPage()));
   }
+ */
 
-/* 
   void _handleLogin() async {
     setState(() {
       if (!_emailEmpty) {
@@ -146,7 +146,7 @@ class _LoginState extends State<Login> {
       // dispose();
     });
   }
- */
+
   void showDismissableFlushbar(BuildContext context, String errorTitle,
       String errorText, bool eraseCases) {
     Flushbar(

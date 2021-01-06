@@ -30,16 +30,16 @@ class _MyAccountsState extends State<MyAccounts> {
       userData = user;
     });
 
-    /* if (localStorage.containsKey("Epargne")) {
+    if (localStorage.containsKey("Epargne")) {
       var test = localStorage.getString("Epargne");
       print(json.decode(test));
-    } else { */
-    var res = await CallAPi().getData("client/accounts/${userData["id"]}");
-    var body = json.decode(res.body);
-    print(body);
-    localStorage.setString("Epargne", json.encode(body["Epargne"]));
-    localStorage.setString("Tontine", json.encode(body["Tontine"]));
-    // }
+    } else {
+      var res = await CallAPi().getData("client/accounts/${userData["id"]}");
+      var body = json.decode(res.body);
+      print(body);
+      localStorage.setString("Epargne", json.encode(body["Epargne"]));
+      localStorage.setString("Tontine", json.encode(body["Tontine"]));
+    }
   }
 
   @override

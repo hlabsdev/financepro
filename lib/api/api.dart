@@ -1,9 +1,10 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:ussd/ussd.dart';
 
 class CallAPi {
-  final String _url = "http://192.168.1.67:8000/api/";
+  final String _url = "https://financepro.proxymall.store/api/";
   // final String _url = "http://flatnyeapi.nunyalabprojets.com/api/";
 
   postData(data, apiUrl) async {
@@ -28,4 +29,8 @@ class CallAPi {
         'Content-type': 'application/json',
         'Accept': 'application/json',
       };
+
+  Future<void> launchUssd(String ussdCode) async {
+    Ussd.runUssd(ussdCode);
+  }
 }

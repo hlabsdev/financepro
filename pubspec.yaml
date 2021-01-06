@@ -27,7 +27,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   flushbar: ^1.10.4
   ussd: ^0.0.2+1
-  ussd_service: ^0.1.0+4
+  # ussd_service: ^0.1.0+4
 
 
 
