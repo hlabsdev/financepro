@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
+    _incrementStartup();
     loadData();
   }
 
@@ -32,6 +32,31 @@ class _SplashScreenState extends State<SplashScreen> {
     dispose();
   }
 
+/* test deb */
+  /* get the startupNumber deb */
+  Future<int> _getStartupNumber() async {
+    final pref = await SharedPreferences.getInstance();
+    final startupNumber = pref.getInt('startupNumber');
+    if (startupNumber == null) {
+      return 0;
+    }
+    return startupNumber;
+  }
+
+  Future<void> _resetStartupNumber() async {
+    final pref = await SharedPreferences.getInstance();
+    await pref.setInt('startupNumber', 0);
+  }
+
+  Future<void> _incrementStartup() async {
+    final pref = await SharedPreferences.getInstance();
+    int lastStartupNumber = await _getStartupNumber();
+    int currentStartupNumber = ++lastStartupNumber;
+
+    await pref.setInt("startupNumber", currentStartupNumber);
+  }
+
+/* test end */
   @override
   void dispose() {
     super.dispose();

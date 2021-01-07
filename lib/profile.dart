@@ -141,7 +141,7 @@ class _ProfileState extends State<Profile> {
                                   padding: const EdgeInsets.only(
                                       left: 22, right: 22, top: 12, bottom: 12),
                                   child: Text(
-                                    'Modifier le profil',
+                                    'Modifier mon mot de passe',
                                     style: GoogleFonts.lato(
                                         color: Colors.white,
                                         letterSpacing: 1,
@@ -171,19 +171,20 @@ class _ProfileState extends State<Profile> {
                       userData != null
                           ? 'Email: ${userData["email"]}'
                           : 'Email: ...',
-                      style: GoogleFonts.cinzel(
-                          fontSize: 20, fontWeight: FontWeight.normal),
+                      style: GoogleFonts.aBeeZee(
+                          fontSize: 18, fontWeight: FontWeight.normal),
                     ),
                     Text(
                       userData != null
                           ? 'Contact: ${userData["phone"]}'
                           : 'Contact: ...',
-                      style: GoogleFonts.cinzel(
-                          fontSize: 20, fontWeight: FontWeight.normal),
+                      style: GoogleFonts.aBeeZee(
+                          fontSize: 18, fontWeight: FontWeight.normal),
                     ),
                   ],
                 ),
               ),
+              color: Colors.grey[100],
             ),
           ],
         ),

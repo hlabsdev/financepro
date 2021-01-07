@@ -37,9 +37,20 @@ class _MyAccountsState extends State<MyAccounts> {
       var res = await CallAPi().getData("client/accounts/${userData["id"]}");
       var body = json.decode(res.body);
       print(body);
+      // localStorage.setString("accounts", json.encode(body[0]));
       localStorage.setString("Epargne", json.encode(body["Epargne"]));
       localStorage.setString("Tontine", json.encode(body["Tontine"]));
     }
+  }
+
+  Future<void> _refreshPage() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var res = await CallAPi().getData("client/accounts/${userData["id"]}");
+    var body = json.decode(res.body);
+    print(body);
+    // localStorage.setString("accounts", json.encode(body[0]));
+    localStorage.setString("Epargne", json.encode(body["Epargne"]));
+    localStorage.setString("Tontine", json.encode(body["Tontine"]));
   }
 
   @override

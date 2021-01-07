@@ -1,0 +1,3 @@
+class Client {
+  String clientID;
+}

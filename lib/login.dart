@@ -220,16 +220,20 @@ class _LoginState extends State<Login> {
                 height: 50,
               ),
               Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(10),
-                  child: Text(
+                alignment: Alignment.center,
+                padding: EdgeInsets.all(10),
+                child: Image(
+                  image: AssetImage("images/logo.png"),
+                ),
+                /* child: Text(
                     "Un Logo ici",
                     style: TextStyle(
                       color: Colors.teal,
                       fontWeight: FontWeight.w500,
                       fontSize: 30,
                     ),
-                  )),
+                  ) */
+              ),
               Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),

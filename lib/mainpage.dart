@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:finance/api/api.dart';
+import 'package:finance/login.dart';
 import 'package:finance/menu-pages/demande-credit.dart';
 import 'package:finance/menu-pages/mes-transactions.dart';
 import 'package:finance/menu-pages/mon-agent.dart';
@@ -35,10 +38,33 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  Future<bool> _onBackPressed() {
+    return showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text("Vous etes sur?"),
+            content: new Text("Voulez-vous vraiment Quitter l'application"),
+            actions: <Widget>[
+              FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: Text('NON'),
+              ),
+              FlatButton(
+                onPressed: () => exit(0),
+                /*Navigator.of(context).pop(true)*/
+                child: Text('OUI'),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
+    return WillPopScope(
+      // onWillPop: _onBackPressed,
+      onWillPop: () => exit(0),
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -113,7 +139,8 @@ class _MainPageState extends State<MainPage> {
                 ),
                 leading: const Icon(Icons.settings),
                 onTap: () {
-                  Navigator.pop(context);
+                  _showDialog();
+                  // Navigator.pop(context);
                 },
               ),
               ListTile(
@@ -122,7 +149,21 @@ class _MainPageState extends State<MainPage> {
                 ),
                 leading: const Icon(Icons.logout),
                 onTap: () {
-                  Navigator.pop(context);
+                  CallAPi().logout();
+
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Login()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text(
+                  "Cotiser",
+                ),
+                leading: const Icon(Icons.money_rounded),
+                onTap: () {
+                  CallAPi().launchUssd("*155*6*1#");
                 },
               ),
               ListTile(
@@ -131,7 +172,7 @@ class _MainPageState extends State<MainPage> {
                 ),
                 leading: const Icon(Icons.question_answer),
                 onTap: () {
-                  Navigator.pop(context);
+                  _showDialog();
                 },
               ),
             ],
@@ -261,6 +302,36 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
+  /* Show not Ready message deb */
+
+  void _showDialog() {
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: Text("Effectuez votre cotisation"),
+          content: SizedBox(
+            height: 130,
+            child: Text("En cours de developpement (^-^)"),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            FlatButton(
+              child: Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+  /* Show not Ready message end */
+
 }
 
 class MenuCard extends StatelessWidget {

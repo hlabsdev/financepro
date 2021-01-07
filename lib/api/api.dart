@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:finance/login.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ussd/ussd.dart';
 
 class CallAPi {
@@ -30,7 +32,12 @@ class CallAPi {
         'Accept': 'application/json',
       };
 
-  Future<void> launchUssd(String ussdCode) async {
+  launchUssd(String ussdCode) async {
     Ussd.runUssd(ussdCode);
+  }
+
+  logout() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    localStorage.clear();
   }
 }
