@@ -9,7 +9,10 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void setupLocator() {
-  GetIt.instance.registerLazySingleton(() => AccountService());
+  GetIt.instance.registerLazySingleton(() {
+    AccountService();
+    CreditService();
+  });
   // GetIt.instance.register
 }
 

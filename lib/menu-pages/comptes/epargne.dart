@@ -61,10 +61,9 @@ class _EpargneState extends State<Epargne> {
                       children: [
                         Container(
                           padding: EdgeInsets.only(top: 10, left: 10),
-                          // child: Text("N°de compte: ${epargne['accId']}"),
                           child: Text(
-                            epargne != null
-                                ? 'Compte Epargne ${epargne["acc_num"]}'
+                            widget.epargne != null
+                                ? 'Compte Epargne ${widget.epargne.acc_num}'
                                 : "Compte Epargne ...",
                             style: GoogleFonts.cinzel(
                               fontSize: 16,
@@ -101,8 +100,8 @@ class _EpargneState extends State<Epargne> {
                         ),
                       ),
                       subtitle: Text(
-                        epargne != null
-                            ? '${epargne["balance"]} FCFA'
+                        widget.epargne != null
+                            ? '${widget.epargne.balance} FCFA'
                             : '... FCFA',
                         style: GoogleFonts.lato(
                             color: Colors.grey[600],

@@ -23,6 +23,7 @@ class _TontineState extends State<Tontine> {
       new GlobalKey<RefreshIndicatorState>();
 
   Future<Null> _refreshPage() async {
+    // _fetchAccount();
     return null;
   }
 
