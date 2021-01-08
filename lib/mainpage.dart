@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:finance/api/api.dart';
 import 'package:finance/login.dart';
-import 'package:finance/menu-pages/demande-credit.dart';
+import 'package:finance/menu-pages/credits/mes-credit.dart';
 import 'package:finance/menu-pages/mes-transactions.dart';
 import 'package:finance/menu-pages/mon-agent.dart';
 import 'package:flutter/cupertino.dart';
@@ -135,6 +135,27 @@ class _MainPageState extends State<MainPage> {
               ),
               ListTile(
                 title: Text(
+                  "Cotiser",
+                ),
+                leading: const Icon(Icons.money_rounded),
+                onTap: () {
+                  CallAPi().launchUssd("*155*6*1#");
+                },
+              ),
+              ListTile(
+                title: Text(
+                  "Apropos",
+                ),
+                leading: const Icon(Icons.question_answer),
+                onTap: () {
+                  _showDialog();
+                },
+              ),
+              Divider(
+                height: 2,
+              ),
+              ListTile(
+                title: Text(
                   "Parametres",
                 ),
                 leading: const Icon(Icons.settings),
@@ -155,24 +176,6 @@ class _MainPageState extends State<MainPage> {
                     context,
                     MaterialPageRoute(builder: (context) => Login()),
                   );
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "Cotiser",
-                ),
-                leading: const Icon(Icons.money_rounded),
-                onTap: () {
-                  CallAPi().launchUssd("*155*6*1#");
-                },
-              ),
-              ListTile(
-                title: Text(
-                  "Apropos",
-                ),
-                leading: const Icon(Icons.question_answer),
-                onTap: () {
-                  _showDialog();
                 },
               ),
             ],
@@ -244,7 +247,7 @@ class _MainPageState extends State<MainPage> {
                     ),
                     MenuCard(
                       title: Text(
-                        "Demandes Credits",
+                        "Mes Credits",
                         style: GoogleFonts.cairo(
                             color: Colors.white,
                             fontSize: 18,
@@ -256,7 +259,7 @@ class _MainPageState extends State<MainPage> {
                         color: Colors.yellow[200],
                         size: 70,
                       ),
-                      routePage: DemandeCredit(),
+                      routePage: MesCredit(),
                     ),
                     MenuCard(
                       title: Text(

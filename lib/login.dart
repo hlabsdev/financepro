@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:finance/api/api.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  TextEditingController mailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  CallAPi api = new CallAPi();
+
+  final TextEditingController _mailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   bool _isAllValidate = false;
   bool _emailEmpty = false;
   bool _emailValidate = false;
@@ -21,21 +24,23 @@ class _LoginState extends State<Login> {
   bool _passwordValidate = false;
 
   bool _isLoading = false;
+  bool _isLogged = false;
 
   @override
   void initState() {
-    // _isAllValidate = false;
-    // _emailEmpty = false;
-    // _emailValidate = false;
-    // _passwordEmpty = false;
-    // _passwordValidate = false;
-    // _isLoading = false;
+    _isAllValidate = false;
+    _emailEmpty = false;
+    _emailValidate = false;
+    _passwordEmpty = false;
+    _passwordValidate = false;
+    _isLoading = false;
+    _isLogged = false;
     super.initState();
   }
 
   String _validateEmail() {
     setState(() {
-      _emailEmpty = mailController.text.isEmpty ? true : false;
+      _emailEmpty = _mailController.text.isEmpty ? true : false;
 
       // mailController.text.contains('@')
       //     ? _emailValidate = true
@@ -53,7 +58,7 @@ class _LoginState extends State<Login> {
 
   String _validatePassword() {
     setState(() {
-      _passwordEmpty = passwordController.text.isEmpty ? true : false;
+      _passwordEmpty = _passwordController.text.isEmpty ? true : false;
 
       // passwordController.text.length <= 4
       //     ? _passwordValidate = true
@@ -75,21 +80,44 @@ class _LoginState extends State<Login> {
   }
  */
 
-  void _handleLogin() async {
+  void _validateAll() {
     setState(() {
       if (!_emailEmpty) {
-        if (_emailValidate) {
-          if (!_passwordEmpty) {
-            if (_passwordValidate) {
-              _isAllValidate = true;
-            }
-          }
+        if (!_passwordEmpty) {
+          _isAllValidate = true;
         }
       } else {
         _isAllValidate = false;
       }
     });
+    // return _isAllValidate ? true : false;
+  }
 
+  void _handleLogin() {
+    setState(() {
+      _isLoading = true;
+      if (_isAllValidate) {
+        api
+            .login(_mailController.text, _passwordController.text)
+            .whenComplete(() {
+          if (api.status) {
+            showDismissableFlushbar(
+                context,
+                "Une erreur s'est produite",
+                "Données invalide, ou mauvaise connexion. Veuillez reessayer avec des données correct ou avec un meilleure connexion",
+                true);
+          } else {
+            Navigator.push(
+                context, MaterialPageRoute(builder: (context) => MainPage()));
+          }
+        });
+      }
+      _isLoading = false;
+    });
+  }
+
+/* 
+  void _handleLogin() async {
     if (!_isAllValidate) {
       showDismissableFlushbar(context, "Saisie invalide",
           "Ressaisissez avec des données valide!", false);
@@ -98,15 +126,16 @@ class _LoginState extends State<Login> {
         _isLoading = true;
       });
       var data = {
-        "email": mailController.text,
+        "email": _mailController.text,
         // "username": mailController.text,
-        "password": passwordController.text,
+        "password": _passwordController.text,
       };
       // var res = await CallAPi().postData(data, "get_token/");
       var res = await CallAPi().postData(data, "client/auth");
-      // var status = json.decode(res.status);
+      var status = res.statusCode;
       var body = json.decode(res.body);
 
+      // if (status == 200) {
       if (body.toString().contains("token")) {
         // if (body["status_code"] == 200) {
         print(body);
@@ -125,13 +154,15 @@ class _LoginState extends State<Login> {
             "Données invalide, ou mauvaise connexion. Veuillez reessayer avec des données correct ou avec un meilleure connexion",
             true);
       }
-      /*  else if (status == 500) {
+      // }
+      /* if (status == 500) {
         showDismissableFlushbar(
             context,
             "Une erreur s'est produite",
             "Le serveur ne repond pas, Veuillez reessayer dans quelques instants!",
             false);
-      } else if (status == 0) {
+      }
+      if (status == 0) {
         showDismissableFlushbar(
             context,
             "Erreur de connexion",
@@ -142,11 +173,9 @@ class _LoginState extends State<Login> {
     setState(() {
       _isLoading = false;
       _isAllValidate = false;
-
-      // dispose();
     });
   }
-
+ */
   void showDismissableFlushbar(BuildContext context, String errorTitle,
       String errorText, bool eraseCases) {
     Flushbar(
@@ -174,139 +203,118 @@ class _LoginState extends State<Login> {
       message: errorText,
     )..show(context);
     if (eraseCases) {
-      mailController.text = "";
-      passwordController.text = "";
+      _mailController.text = "";
+      _passwordController.text = "";
     }
-  }
-
-  ScaffoldState scaffoldState;
-
-  // ignore: unused_element
-  _showMsg(msg) {
-    final snackBar = SnackBar(
-      content: Text(msg),
-      action: SnackBarAction(
-        label: "Fermer",
-        onPressed: () {
-          //someting
-        },
-      ),
-    );
-    Scaffold.of(context).showSnackBar(snackBar);
-  }
-
-  @override
-  void dispose() {
-    mailController.dispose();
-    passwordController.dispose();
-    // _isAllValidate = false;
-    // _emailEmpty = false;
-    // _emailValidate = false;
-    // _passwordEmpty = false;
-    // _passwordValidate = false;
-    // _isLoading = false;
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Center(
-      child: Padding(
-          padding: EdgeInsets.all(10),
-          child: ListView(
-            children: <Widget>[
-              SizedBox(
-                height: 50,
-              ),
-              Container(
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(10),
-                child: Image(
-                  image: AssetImage("images/logo.png"),
+    return WillPopScope(
+      onWillPop: () => exit(0),
+      child: Scaffold(
+          body: Center(
+        child: Padding(
+            padding: EdgeInsets.all(10),
+            child: ListView(
+              children: <Widget>[
+                SizedBox(
+                  height: 50,
                 ),
-                /* child: Text(
-                    "Un Logo ici",
-                    style: TextStyle(
-                      color: Colors.teal,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 30,
-                    ),
-                  ) */
-              ),
-              Container(
+                Container(
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(10),
-                  child: Text(
-                    _isLoading ? "Connection..." : 'Connectez-vous',
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  )),
-              Container(
-                padding: EdgeInsets.all(10),
-                child: TextField(
-                  controller: mailController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Email",
-                      icon: Icon(
-                        Icons.mail,
-                        color: Colors.grey,
-                      ),
-                      errorText: _validateEmail(),
-                      // errorText: _isLoading ? _validateEmail() : null,
-                      errorStyle: TextStyle(
-                        textBaseline: TextBaseline.ideographic,
-                      )),
-                ),
-              ),
-              Container(
-                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: TextField(
-                  obscureText: true,
-                  controller: passwordController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: "Mot de Passe",
-                    icon: Icon(
-                      Icons.lock,
-                      color: Colors.grey,
-                    ),
-                    // errorText: _isLoading ? _validatePassword() : null,
-                    errorText: _validatePassword(),
+                  child: Image(
+                    image: AssetImage("images/logo.png"),
                   ),
                 ),
-              ),
-              FlatButton(
-                onPressed: () {
-                  //forgot password screen
-                },
-                textColor: Colors.teal,
-                child: Text("Vous avez oublié le mot de passe ?"),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                  height: 50,
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                  child: RaisedButton(
-                    textColor: Colors.white,
-                    color: Theme.of(context).primaryColor,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Text('Login'),
-                    onPressed: () {
-                      _handleLogin();
+                Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(10),
+                    child: Text(
+                      _isLoading ? "Connection..." : 'Connectez-vous',
+                      style: TextStyle(
+                        fontSize: 20,
+                      ),
+                    )),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: _mailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Email",
+                        icon: Icon(
+                          Icons.mail,
+                          color: Colors.grey,
+                        ),
+                        // errorText: _validateEmail(),
+                        errorText: _isLoading ? _validateEmail() : null,
+                        errorStyle: TextStyle(
+                          textBaseline: TextBaseline.ideographic,
+                        )),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: TextField(
+                    obscureText: true,
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: "Mot de Passe",
+                      icon: Icon(
+                        Icons.lock,
+                        color: Colors.grey,
+                      ),
+                      errorText: _isLoading ? _validatePassword() : null,
+                      // errorText: _validatePassword(),
+                    ),
+                    onChanged: (value) {
+                      _validateAll();
                     },
-                  )),
-              SizedBox(
-                height: 8,
-              ),
-            ],
-          )),
-    ));
+                    // onSubmitted: (value) {
+                    //   _validateAll();
+                    // },
+                  ),
+                ),
+                FlatButton(
+                  onPressed: () {
+                    //forgot password screen
+                  },
+                  textColor: Colors.teal,
+                  child: Text("Vous avez oublié le mot de passe ?"),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Container(
+                    height: 50,
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Text('Login'),
+                      onPressed: () {
+                        _isAllValidate
+                            ? _handleLogin()
+                            : showDismissableFlushbar(
+                                context,
+                                "Pas de saisie",
+                                "Saisiessez quelque chose avant de valider",
+                                false);
+                      },
+                    )),
+                SizedBox(
+                  height: 8,
+                ),
+              ],
+            )),
+      )),
+    );
   }
 }

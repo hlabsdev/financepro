@@ -1,53 +1,28 @@
-import 'dart:convert';
-
-import 'package:finance/api/api.dart';
-import 'package:finance/menu-pages/mes-transactions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:finance/api/api.dart';
+import 'package:finance/models/type_acc.dart';
 
 class Tontine extends StatefulWidget {
+  final Type_acc tontine;
+
+  const Tontine({
+    Key key,
+    this.tontine,
+  }) : super(key: key);
+
   @override
   _TontineState createState() => _TontineState();
 }
 
 class _TontineState extends State<Tontine> {
-  var tontine;
-
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
-  @override
-  void initState() {
-    getTontine();
-    super.initState();
-  }
-
-  Future<void> getTontine() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var tontJson = localStorage.getString("Tontine");
-    var tont = json.decode(tontJson);
-    setState(() {
-      tontine = tont;
-    });
-  }
-
   Future<Null> _refreshPage() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-
-    var res =
-        await CallAPi().getData("client/accounts/${tontine["client_id"]}");
-    var body = json.decode(res.body);
-    // print(body);
-    await new Future.delayed(const Duration(seconds: 3));
-
-    localStorage.setString("Tontine", json.encode(body["Tontine"]));
-    localStorage.reload();
-    setState(() {
-      tontine = json.decode(localStorage.getString("Tontine"));
-    });
     return null;
   }
 
@@ -91,8 +66,8 @@ class _TontineState extends State<Tontine> {
                           padding: EdgeInsets.only(top: 10, left: 10),
                           // child: Text("N°de compte: ${tontine['accId']}"),
                           child: Text(
-                            tontine != null
-                                ? 'Compte Tontine ${tontine["acc_num"]}'
+                            widget.tontine != null
+                                ? 'Compte Tontine ${widget.tontine.acc_num}'
                                 : "Compte Tontine ...",
                             style: GoogleFonts.cinzel(
                               fontSize: 16,
@@ -129,8 +104,8 @@ class _TontineState extends State<Tontine> {
                         ),
                       ),
                       subtitle: Text(
-                        tontine != null
-                            ? '${tontine["balance"]} FCFA'
+                        widget.tontine != null
+                            ? '${widget.tontine.balance} FCFA'
                             : '... FCFA',
                         style: GoogleFonts.lato(
                             color: Colors.grey[600],
@@ -474,7 +449,7 @@ class _TontineState extends State<Tontine> {
   void _showDialog() {
     TextEditingController sommeController = TextEditingController();
     setState(() {
-      sommeController.text = tontine["mise"];
+      sommeController.text = widget.tontine.mise;
     });
     // flutter defined function
     showDialog(

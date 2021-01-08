@@ -38,10 +38,15 @@ dependencies:
   ussd: ^0.0.2+1
   # ussd_service: ^0.1.0+4
   expansion_tile_card: ^1.1.0
+  get_it: ^5.0.3
+  json_annotation:
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  json_model:
+  build_runner:
+  json_serializable:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,0 +1,16 @@
+{
+    "id": 36,
+    "active": false,
+    "loan_id": "1",
+    "amount": 8537,
+    "payed": 0,
+    "rendu": 0,
+    "interest_amount": 204,
+    "fix_amount": 8334,
+    "payment_status": null,
+    "due_date": "2020-12-29T00:00:00.000000Z",
+    "date_of_payment": "2020-12-29T00:00:00.000000Z",
+    "remarks": null,
+    "created_at": 1609294912,
+    "updated_at": 1609294912
+}

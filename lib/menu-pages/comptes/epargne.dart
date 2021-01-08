@@ -1,55 +1,25 @@
-import 'package:finance/api/api.dart';
+import 'package:finance/models/type_acc.dart';
 import 'package:flutter/material.dart';
 
-import 'dart:convert';
-
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Epargne extends StatefulWidget {
+  final Type_acc epargne;
+
+  const Epargne({
+    Key key,
+    this.epargne,
+  }) : super(key: key);
+
   @override
   _EpargneState createState() => _EpargneState();
 }
 
 class _EpargneState extends State<Epargne> {
-  var epargne;
-  var compte;
-  String _selectedItem = '';
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
-  @override
-  void initState() {
-    getTontine();
-    super.initState();
-  }
-
-  Future<void> getTontine() async {
-    SharedPreferences localStrorage = await SharedPreferences.getInstance();
-    var tontJson = localStrorage.getString("Epargne");
-    var epgn = json.decode(tontJson);
-
-    /* var contJson = localStrorage.getString("accounts");
-    var cmpt = json.decode(contJson); */
-    setState(() {
-      epargne = epgn;
-      // compte = cmpt;
-    });
-  }
 
   Future<Null> _refreshPage() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var res =
-        await CallAPi().getData("client/accounts/${epargne["client_id"]}");
-    var body = json.decode(res.body);
-    // print(body);
-    await new Future.delayed(const Duration(seconds: 3));
-
-    localStorage.setString("Epargne", json.encode(body["Epargne"]));
-    localStorage.reload();
-    setState(() {
-      epargne = json.decode(localStorage.getString("Epargne"));
-    });
     return null;
   }
 

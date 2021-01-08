@@ -1,0 +1,16 @@
+{
+    "id": 1,
+    "balance": "49635",
+    "acc_num": "COCEC-E125",
+    "client_id": "2",
+    "creator_id": "1",
+    "account_type_id": "2",
+    "state": true,
+    "amount_blocked": 0,
+    "nanti": 30000,
+    "block_period": 0,
+    "block_end_date": "2020-12-24 18:10:32.000000",
+    "mise": "0",
+    "created_at": 1608833432,
+    "updated_at": 1610057667
+}
