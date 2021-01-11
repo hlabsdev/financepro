@@ -8,6 +8,13 @@ import 'package:flushbar/flushbar.dart';
 import 'mainpage.dart';
 
 class Login extends StatefulWidget {
+  final bool isMain;
+
+  const Login({
+    Key key,
+    this.isMain = false,
+  }) : super(key: key);
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -74,11 +81,18 @@ class _LoginState extends State<Login> {
     return errorMesg;
   }
 
-/*   void _handleLogin() {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => MainPage()));
+  void onClose() {
+    Navigator.of(context).pushReplacement(PageRouteBuilder(
+        maintainState: true,
+        opaque: true,
+        pageBuilder: (context, __, ___) => MainPage(),
+        transitionsBuilder: (context, anim1, anim2, child) {
+          return new FadeTransition(
+            child: child,
+            opacity: anim1,
+          );
+        }));
   }
- */
 
   void _validateAll() {
     setState(() {
@@ -107,8 +121,10 @@ class _LoginState extends State<Login> {
                 "Données invalide, ou mauvaise connexion. Veuillez reessayer avec des données correct ou avec un meilleure connexion",
                 true);
           } else {
-            Navigator.push(
-                context, MaterialPageRoute(builder: (context) => MainPage()));
+            widget.isMain
+                ? onClose()
+                : Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MainPage()));
           }
         });
       }

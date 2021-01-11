@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:finance/login.dart';
-import 'package:finance/mainpage.dart';
+import 'package:finance/pages/login.dart';
+import 'package:finance/pages/mainpage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +11,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool _isLogged;
+
   @override
   void initState() {
     super.initState();
@@ -19,17 +21,28 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<Timer> loadData() async {
-    return new Timer(Duration(seconds: 5), onDoneLoading);
+    SharedPreferences localData = await SharedPreferences.getInstance();
+    setState(() {
+      localData.containsKey("token") ? _isLogged = true : _isLogged = false;
+    });
+
+    return new Timer(const Duration(seconds: 5), onDoneLoading);
   }
 
   onDoneLoading() async {
-    SharedPreferences localData = await SharedPreferences.getInstance();
-    localData.containsKey("token")
-        ? Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => MainPage()))
-        : Navigator.of(context)
-            .push(MaterialPageRoute(builder: (context) => Login()));
-    dispose();
+    Navigator.of(context).pushReplacement(PageRouteBuilder(
+        maintainState: true,
+        opaque: true,
+        pageBuilder: (context, __, ___) =>
+            _isLogged ? MainPage() : Login(isMain: true),
+        transitionDuration: const Duration(seconds: 2),
+        transitionsBuilder: (context, anim1, anim2, child) {
+          return new FadeTransition(
+            child: child,
+            opacity: anim1,
+          );
+        }));
+    // dispose();
   }
 
 /* test deb */
@@ -57,16 +70,6 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
 /* test end */
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
-  void deactivate() {
-    dispose();
-    super.deactivate();
-  }
 
   @override
   Widget build(BuildContext context) {

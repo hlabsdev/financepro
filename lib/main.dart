@@ -1,19 +1,15 @@
-import 'package:finance/login.dart';
-import 'package:finance/mainpage.dart';
-import 'package:finance/profile.dart';
-import 'package:finance/services/account_service.dart';
-import 'package:finance/services/credit_service.dart';
-import 'package:finance/splash.dart';
 import "package:flutter/material.dart";
 import 'package:get_it/get_it.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:finance/pages/splash.dart';
+import 'package:finance/services/app_services.dart';
 
 void setupLocator() {
-  GetIt.instance.registerLazySingleton(() {
-    AccountService();
-    CreditService();
-  });
-  // GetIt.instance.register
+  GetIt.instance.registerLazySingleton(() => MyAppServices());
+  // GetIt.instance.registerLazySingleton(() => {
+  //       AccountService(),
+  //       CreditService(),
+  //     });
 }
 
 void main() {
@@ -22,9 +18,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  /* get the startupNumber deb */
-  /* get the startupNumber end */
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -40,11 +33,11 @@ class MyApp extends StatelessWidget {
       //visualDensity: VisualDensity.adaptivePlatformDensity,
       //),
       home: SplashScreen(),
-      routes: <String, WidgetBuilder>{
-        '/login': (BuildContext context) => new Login(),
-        '/mainpage': (BuildContext context) => new MainPage(),
-        '/profile': (BuildContext context) => new Profile(),
-      },
+      // routes: <String, WidgetBuilder>{
+      //   '/login': (BuildContext context) => new Login(),
+      //   '/mainpage': (BuildContext context) => new MainPage(),
+      //   '/profile': (BuildContext context) => new Profile(),
+      // },
     );
   }
 }

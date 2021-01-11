@@ -1,14 +1,15 @@
 import 'dart:convert';
 
-import 'package:finance/api/api.dart';
-import 'package:finance/menu-pages/comptes/epargne.dart';
-import 'package:finance/menu-pages/comptes/tontine.dart';
-import 'package:finance/models/account.dart';
-import 'package:finance/services/account_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:finance/api/api.dart';
+import 'package:finance/models/account.dart';
+import 'package:finance/pages/comptes/epargne.dart';
+import 'package:finance/pages/comptes/tontine.dart';
+import 'package:finance/services/app_services.dart';
 
 class MyAccounts extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class MyAccounts extends StatefulWidget {
 }
 
 class _MyAccountsState extends State<MyAccounts> {
-  AccountService get service => GetIt.I<AccountService>();
+  MyAppServices get service => GetIt.I<MyAppServices>();
 
   var userData;
   ApiResponse<Account> _apiResponse;
@@ -112,15 +113,13 @@ class _MyAccountsState extends State<MyAccounts> {
               }
               if (_apiResponse.error) {
                 return Center(
-                  child: Text(_apiResponse.erorMessage),
+                  child: Text(_apiResponse.errorMessage),
                 );
               }
               return TabBarView(
                 children: [
-                  // Tontine(_apiResponse.data.tontine),
                   Tontine(tontine: _apiResponse.data.tontine),
                   Epargne(epargne: _apiResponse.data.epargne),
-                  // Epargne(),
                 ],
               );
             },

@@ -1,9 +1,5 @@
 import 'dart:convert';
 
-import 'package:finance/api/api.dart';
-import 'package:finance/menu-pages/credits/create-demande.dart';
-import 'package:finance/menu-pages/credits/demande_delete.dart';
-import 'package:finance/services/credit_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +7,16 @@ import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:finance/api/api.dart';
+import 'package:finance/pages/credits/create_demande.dart';
+import 'package:finance/pages/credits/demande_delete.dart';
+
 class MesCredit extends StatefulWidget {
   @override
   _MesCreditState createState() => _MesCreditState();
 }
 
 class _MesCreditState extends State<MesCredit> {
-  CreditService get service => GetIt.I<CreditService>();
   var userData;
   var creditEpargne;
   var creditTontine;

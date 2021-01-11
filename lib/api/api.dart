@@ -4,8 +4,6 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ussd/ussd.dart';
 
-import 'package:finance/login.dart';
-
 class CallAPi {
   final String _url = "https://financepro.proxymall.store/api/";
   var status;
@@ -79,11 +77,11 @@ class CallAPi {
 class ApiResponse<T> {
   T data;
   bool error;
-  String erorMessage;
+  String errorMessage;
 
   ApiResponse({
     this.data,
     this.error = false,
-    this.erorMessage,
+    this.errorMessage,
   });
 }
