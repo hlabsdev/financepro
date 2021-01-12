@@ -4,7 +4,6 @@ import 'package:finance/api/api.dart';
 import 'package:finance/models/index.dart';
 import 'package:finance/services/app_services.dart';
 import 'package:finance/services/user_preferences.dart';
-import 'package:finance/utils/mfp_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,14 +36,14 @@ class _CarnetState extends State<Carnet> {
       setState(() {
         _apiResponse = newApiResp;
       });
-      UserPreferences().moisList = json.encode(newApiResp.data);
+      UserPreferences().carnet = json.encode(newApiResp.data);
     } else {
-      if (UserPreferences().moisList.toString().isEmpty) {
+      if (UserPreferences().carnet.toString().isEmpty) {
         _apiResponse = await service.getMoisList();
-        UserPreferences().moisList = json.encode(_apiResponse.data);
+        UserPreferences().carnet = json.encode(_apiResponse.data);
       } else {
         var listMois = <Mois>[];
-        for (var index in json.decode(UserPreferences().moisList)) {
+        for (var index in json.decode(UserPreferences().carnet)) {
           // listMois.add(Mois.fromJson(json.decode(index)));
           listMois.add(Mois.fromJson(index));
         }
@@ -62,7 +61,25 @@ class _CarnetState extends State<Carnet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MFPAppBar("Mon Carnet", _fetchData(true)).buildAppBar(),
+      appBar: AppBar(
+        centerTitle: false,
+        actions: [
+          IconButton(
+            tooltip: "Rafraichir la page",
+            icon: Icon(Icons.refresh_rounded),
+            onPressed: () {
+              _fetchData(true);
+            },
+          ),
+        ],
+        title: Text(
+          "Mon Carnet",
+          style: GoogleFonts.arya(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.normal),
+        ),
+      ),
       body: Builder(builder: (_) {
         if (_isLoading) {
           return Center(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/services/user_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -17,9 +18,7 @@ class MyAppServices {
 
   /* ===== Tout ce qui concerne Account deb ===== */
   Future<ApiResponse<Account>> getAccount() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    final user = json.decode(localStorage.getString("client"));
-
+    final user = json.decode(UserPreferences().client);
     return http
         .get(API + "client/accounts/${user["id"]}", headers: headers)
         .then((data) {
@@ -46,9 +45,7 @@ class MyAppServices {
 
   /* ===== Tout ce qui concerne Credit deb ===== */
   Future<ApiResponse<List<Credit>>> getCreditTontineList() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    final user = json.decode(localStorage.getString("client"));
-
+    final user = json.decode(UserPreferences().client);
     return http
         .get(API + "client/accounts/loan/${user["id"]}", headers: headers)
         .then((data) {
@@ -67,8 +64,7 @@ class MyAppServices {
   }
 
   Future<ApiResponse<List<Credit>>> getCreditEpargneList() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    final user = json.decode(localStorage.getString("client"));
+    final user = json.decode(UserPreferences().client);
 
     return http
         .get(API + "client/accounts/loan/${user["id"]}", headers: headers)
@@ -137,8 +133,7 @@ class MyAppServices {
 
   /* ===== Tout ce qui concerne Carnet deb ===== */
   Future<ApiResponse<List<Mois>>> getMoisList() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    final user = json.decode(localStorage.getString("client"));
+    final user = json.decode(UserPreferences().client);
 
     return http
         .get(API + "client/carnet-tontine/${user["id"]}", headers: headers)

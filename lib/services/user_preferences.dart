@@ -62,11 +62,11 @@ class UserPreferences {
     _prefs.setString("tontine", value);
   }
 
-  get moisList {
+  get carnet {
     return _prefs.getString("moisList") ?? "";
   }
 
-  set moisList(String value) {
+  set carnet(String value) {
     _prefs.setString("moisList", value);
   }
 

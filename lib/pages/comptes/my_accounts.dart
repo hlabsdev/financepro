@@ -27,7 +27,6 @@ class _MyAccountsState extends State<MyAccounts> {
 
   @override
   void initState() {
-    userData = UserPreferences().client;
     _fetchData(false);
     super.initState();
   }
