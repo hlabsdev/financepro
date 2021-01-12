@@ -1,3 +1,4 @@
+import 'package:finance/services/user_preferences.dart';
 import "package:flutter/material.dart";
 import 'package:get_it/get_it.dart';
 
@@ -12,7 +13,9 @@ void setupLocator() {
   //     });
 }
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await UserPreferences().init();
   setupLocator();
   runApp(MyApp());
 }

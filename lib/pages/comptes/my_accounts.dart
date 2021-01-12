@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/services/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,52 +27,35 @@ class _MyAccountsState extends State<MyAccounts> {
 
   @override
   void initState() {
-    getUserAccountsInfos();
-    _fetchAccount();
+    userData = UserPreferences().client;
+    _fetchData(false);
     super.initState();
   }
 
-  _fetchAccount() async {
+  _fetchData(bool getNew) async {
     setState(() {
       _isLoading = true;
     });
-
-    _apiResponse = await service.getAccount();
+    if (getNew) {
+      var newApiResp = await service.getAccount();
+      setState(() {
+        _apiResponse = newApiResp;
+      });
+      UserPreferences().comptes = json.encode(newApiResp.data);
+    } else {
+      if (UserPreferences().comptes.toString().isEmpty) {
+        _apiResponse = await service.getAccount();
+        UserPreferences().comptes = json.encode(_apiResponse.data);
+      } else {
+        _apiResponse = ApiResponse<Account>(
+          data: Account.fromJson(json.decode(UserPreferences().comptes)),
+        );
+      }
+    }
 
     setState(() {
       _isLoading = false;
     });
-  }
-
-  Future<void> getUserAccountsInfos() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var userJson = localStorage.getString("client");
-    var user = json.decode(userJson);
-    setState(() {
-      userData = user;
-    });
-/* 
-    if (localStorage.containsKey("Epargne")) {
-      var test = localStorage.getString("Epargne");
-      print(json.decode(test));
-    } else {
-      var res = await CallAPi().getData("client/accounts/${userData["id"]}");
-      var body = json.decode(res.body);
-      print(body);
-      // localStorage.setString("accounts", json.encode(body[0]));
-      localStorage.setString("Epargne", json.encode(body["Epargne"]));
-      localStorage.setString("Tontine", json.encode(body["Tontine"]));
-    } */
-  }
-
-  Future<void> _refreshPage() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var res = await CallAPi().getData("client/accounts/${userData["id"]}");
-    var body = json.decode(res.body);
-    print(body);
-    // localStorage.setString("accounts", json.encode(body[0]));
-    localStorage.setString("Epargne", json.encode(body["Epargne"]));
-    localStorage.setString("Tontine", json.encode(body["Tontine"]));
   }
 
   @override
@@ -81,7 +65,16 @@ class _MyAccountsState extends State<MyAccounts> {
       initialIndex: 0,
       child: Scaffold(
           appBar: AppBar(
-            centerTitle: true,
+            centerTitle: false,
+            actions: [
+              IconButton(
+                tooltip: "Rafraichir la page",
+                icon: Icon(Icons.refresh_rounded),
+                onPressed: () {
+                  _fetchData(true);
+                },
+              ),
+            ],
             title: Text(
               "Mes comptes",
               style: GoogleFonts.arya(

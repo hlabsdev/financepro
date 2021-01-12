@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:finance/api/api.dart';
 import 'package:finance/models/index.dart';
 import 'package:finance/services/app_services.dart';
-import 'package:finance/utils/refreshable_view.dart';
+import 'package:finance/services/user_preferences.dart';
+import 'package:finance/utils/mfp_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,9 +17,6 @@ class Carnet extends StatefulWidget {
 class _CarnetState extends State<Carnet> {
   MyAppServices get service => GetIt.I<MyAppServices>();
 
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      new GlobalKey<RefreshIndicatorState>();
-
   var userData;
   ApiResponse<List<Mois>> _apiResponse;
   bool _isLoading;
@@ -24,40 +24,45 @@ class _CarnetState extends State<Carnet> {
 
   @override
   void initState() {
-    _fetchAccount();
+    _fetchData(false);
     super.initState();
   }
 
-  _fetchAccount() async {
+  _fetchData(bool getNew) async {
     setState(() {
       _isLoading = true;
     });
-
-    _apiResponse = await service.getMoisList();
+    if (getNew) {
+      var newApiResp = await service.getMoisList();
+      setState(() {
+        _apiResponse = newApiResp;
+      });
+      UserPreferences().moisList = json.encode(newApiResp.data);
+    } else {
+      if (UserPreferences().moisList.toString().isEmpty) {
+        _apiResponse = await service.getMoisList();
+        UserPreferences().moisList = json.encode(_apiResponse.data);
+      } else {
+        var listMois = <Mois>[];
+        for (var index in json.decode(UserPreferences().moisList)) {
+          // listMois.add(Mois.fromJson(json.decode(index)));
+          listMois.add(Mois.fromJson(index));
+        }
+        _apiResponse = ApiResponse<List<Mois>>(
+          data: listMois,
+        );
+      }
+    }
 
     setState(() {
       _isLoading = false;
     });
   }
 
-  Future<Null> _refreshPage() async {
-    return null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Mon Carnet",
-          style: GoogleFonts.arya(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
-          ),
-          textAlign: TextAlign.center,
-        ),
-        // centerTitle: true,
-      ),
+      appBar: MFPAppBar("Mon Carnet", _fetchData(true)).buildAppBar(),
       body: Builder(builder: (_) {
         if (_isLoading) {
           return Center(
@@ -69,78 +74,77 @@ class _CarnetState extends State<Carnet> {
             child: Text(_apiResponse.errorMessage),
           );
         }
-        return RefreshableView(
-          refreshIndicatorKey: _refreshIndicatorKey,
-          refreshPage: _refreshPage(),
-          child: SingleChildScrollView(
-            child: Container(
-                padding: EdgeInsets.only(top: 8),
-                child: ListView.separated(
-                  // padding: EdgeInsets.symmetric(vertical: 5, horizontal: 6),
-                  shrinkWrap: true,
-                  primary: false,
-                  separatorBuilder: (_, __) => Divider(
-                    height: 1,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  itemCount: _apiResponse.data.length,
-                  itemBuilder: ((BuildContext context, int index) {
-                    return InkWell(
-                      onTap: () => {
-                        Navigator.of(context)
-                            .push(PageRouteBuilder(pageBuilder: (_, __, ___) {
-                          return MoisDetailGrid();
-                        }))
-                      },
-                      child: ListTile(
-                        autofocus: true,
-                        focusNode: FocusNode(canRequestFocus: true),
-                        title: Text(
-                          _apiResponse.data != null
-                              ? 'Mois ${_apiResponse.data[index].month}'
-                              : "Mois ...",
-                        ),
-                        leading: Icon(Icons.date_range_rounded),
-                        subtitle: Text(
-                          _apiResponse.data != null
-                              ? 'Position: Jour ${_apiResponse.data[index].position}'
-                              : "Position ...",
-                        ),
-                        trailing: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 0.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Text(
-                                _apiResponse.data[index].is_taken
-                                    ? "Retiré"
-                                    : "Non retitié",
-                                style: GoogleFonts.lato(
-                                  color: Colors.blue[600],
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+        return SingleChildScrollView(
+          child: Container(
+              padding: EdgeInsets.only(top: 8),
+              child: ListView.separated(
+                // padding: EdgeInsets.symmetric(vertical: 5, horizontal: 6),
+                shrinkWrap: true,
+                primary: false,
+                separatorBuilder: (_, __) => Divider(
+                  height: 1,
+                  color: Theme.of(context).primaryColor,
+                ),
+                itemCount: _apiResponse.data.length,
+                itemBuilder: ((BuildContext context, int index) {
+                  return InkWell(
+                    onTap: () => {
+                      Navigator.of(context)
+                          .push(PageRouteBuilder(pageBuilder: (_, __, ___) {
+                        return MoisDetailGrid();
+                      }))
+                    },
+                    child: ListTile(
+                      autofocus: true,
+                      focusNode: FocusNode(canRequestFocus: true),
+                      title: Text(
+                        _apiResponse.data != null
+                            ? 'Mois ${_apiResponse.data[index].month}'
+                            : "Mois ...",
+                      ),
+                      leading: Icon(
+                        Icons.date_range_rounded,
+                        color: Colors.blueAccent[500],
+                      ),
+                      subtitle: Text(
+                        _apiResponse.data != null
+                            ? 'Position: Jour ${_apiResponse.data[index].position}'
+                            : "Position ...",
+                      ),
+                      trailing: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8.0, horizontal: 0.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
                               _apiResponse.data[index].is_taken
-                                  ? Icon(
-                                      Icons.check_circle_outline_rounded,
-                                      size: 20,
-                                      color: Colors.green,
-                                    )
-                                  : Icon(
-                                      Icons.cancel_outlined,
-                                      size: 20,
-                                      color: Colors.red,
-                                    )
-                            ],
-                          ),
+                                  ? "Retiré"
+                                  : "Non retitié",
+                              style: GoogleFonts.lato(
+                                color: Colors.blue[600],
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            _apiResponse.data[index].is_taken
+                                ? Icon(
+                                    Icons.check_circle_outline_rounded,
+                                    size: 20,
+                                    color: Colors.green,
+                                  )
+                                : Icon(
+                                    Icons.cancel_outlined,
+                                    size: 20,
+                                    color: Colors.red,
+                                  )
+                          ],
                         ),
                       ),
-                    );
-                  }),
-                )),
-          ),
+                    ),
+                  );
+                }),
+              )),
         );
       }),
     );
@@ -176,7 +180,7 @@ class MoisDetailGrid extends StatelessWidget {
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
           itemBuilder: ((BuildContext context, int index) {
             return new Card(
-              color: Colors.black12,
+              color: Colors.blueAccent,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 5),
                 child: new GridTile(

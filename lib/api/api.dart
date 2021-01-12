@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/services/user_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ussd/ussd.dart';
@@ -7,6 +8,7 @@ import 'package:ussd/ussd.dart';
 class CallAPi {
   final String _url = "https://financepro.proxymall.store/api/";
   var status;
+  var userData;
   var statusCode;
   var token;
 
@@ -37,6 +39,7 @@ class CallAPi {
     status = response.body.contains('error');
     status = response.body.isEmpty;
     var data = json.decode(response.body);
+    userData = data;
 
     if (status) {
       print("data: $data['error]");
@@ -52,9 +55,11 @@ class CallAPi {
       };
 
   _saveUser(var body) async {
-    final localStorage = await SharedPreferences.getInstance();
-    localStorage.setString("token", body["token"]);
-    localStorage.setString("client", json.encode(body["client"]));
+    // final localStorage = await SharedPreferences.getInstance();
+    // localStorage.setString("token", body["token"]);
+    // localStorage.setString("client", json.encode(body["client"]));
+    UserPreferences().client = json.encode(body["client"]);
+    UserPreferences().token = json.encode(body["token"]);
   }
 
   readUser() async {

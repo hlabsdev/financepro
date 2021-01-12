@@ -114,7 +114,7 @@ class _LoginState extends State<Login> {
         api
             .login(_mailController.text, _passwordController.text)
             .whenComplete(() {
-          if (api.status) {
+          if ((api.status) || (api.userData["token"].toString().isEmpty)) {
             showDismissableFlushbar(
                 context,
                 "Une erreur s'est produite",
@@ -128,6 +128,9 @@ class _LoginState extends State<Login> {
           }
         });
       }
+    });
+
+    setState(() {
       _isLoading = false;
     });
   }
