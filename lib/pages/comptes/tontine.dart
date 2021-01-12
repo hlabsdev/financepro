@@ -97,7 +97,9 @@ class _TontineState extends State<Tontine> {
                       }, */
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => CotisationPage()));
+                                builder: (_) => CotisationPage(
+                                      mise: widget.tontine.mise,
+                                    )));
                           },
                           child: Container(
                               decoration: BoxDecoration(
@@ -231,76 +233,5 @@ class _TontineState extends State<Tontine> {
           child: Icon(Icons.menu_book),
           tooltip: "Consultez votre carnet electronique",
         ));
-  }
-
-  void _showDialog() {
-    TextEditingController sommeController = TextEditingController();
-    setState(() {
-      sommeController.text = widget.tontine.mise;
-    });
-    // flutter defined function
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        // return object of type Dialog
-        return CupertinoAlertDialog(
-          title: Text("Effectuez votre cotisation"),
-          content: Column(
-            children: [
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                // padding: EdgeInsets.all(6),
-                child: CupertinoTextField(
-                  controller: sommeController,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  placeholder: "Montant",
-                  // decoration: InputDecoration(
-                  //     // border: OutlineInputBorder(),
-                  //     border: UnderlineInputBorder(),
-                  //     labelText: "Montant",
-
-                  //     // errorText: _isLoading ? _validateEmail() : null,
-                  //     errorStyle: TextStyle(
-                  //       textBaseline: TextBaseline.ideographic,
-                  //     )),
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                  child: RaisedButton(
-                textColor: Colors.white,
-                color: Theme.of(context).primaryColor,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                child: Text('Valider'),
-                onPressed: () {
-                  CallAPi().launchUssd("*101#");
-                },
-              )),
-            ],
-          ),
-          actions: <Widget>[
-            // usually buttons at the bottom of the dialog
-            FlatButton(
-              child: Text("Fermer"),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-    setState(() {
-      sommeController.text = "";
-    });
   }
 }

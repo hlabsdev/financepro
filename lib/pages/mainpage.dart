@@ -65,7 +65,7 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         title: Text(
           'MON COMPTE',
           style: GoogleFonts.arya(
@@ -189,106 +189,58 @@ class _MainPageState extends State<MainPage> {
                 // crossAxisSpacing: 2,
                 // mainAxisSpacing: 2,
                 crossAxisCount: 2,
-                children: <Widget>[
-                  MenuCard(
-                    title: Text(
-                      "Mes Comptes",
-                      style: GoogleFonts.cairo(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    cardColor: Colors.deepPurple,
-                    icon: Icon(
-                      Icons.account_balance_wallet,
-                      color: Colors.yellow[200],
-                      size: 70,
+                children: [
+                  MenuIconCard(
+                    title: "Mes Comptes",
+                    image: Image(
+                      image: AssetImage("images/menu/mes_comptes.png"),
+                      height: 50,
+                      width: 50,
                     ),
                     routePage: MyAccounts(),
                   ),
-                  MenuCard(
-                    title: Text(
-                      "Mes Credits",
-                      style: GoogleFonts.cairo(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                    ),
-                    cardColor: Colors.deepPurple,
-                    icon: Icon(
-                      Icons.credit_card_rounded,
-                      color: Colors.yellow[200],
-                      size: 70,
+                  MenuIconCard(
+                    title: "Mes Credits",
+                    image: Image(
+                      image: AssetImage("images/menu/credits.png"),
+                      height: 50,
+                      width: 50,
                     ),
                     routePage: MesCredit(),
                   ),
-                  MenuCard(
-                    title: Text(
-                      "Transfert",
-                      style: GoogleFonts.cairo(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    cardColor: Colors.deepPurple,
-                    icon: Icon(
-                      Icons.send_to_mobile,
-                      color: Colors.yellow[200],
-                      size: 70,
+                  MenuIconCard(
+                    title: "Transfert",
+                    image: Image(
+                      image: AssetImage("images/menu/transferts.png"),
+                      height: 50,
+                      width: 50,
                     ),
                     routePage: MesTansfert(),
                   ),
-                  MenuCard(
-                    title: Text(
-                      "Mes Transactions",
-                      style: GoogleFonts.cairo(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    cardColor: Colors.deepPurple,
-                    icon: Icon(
-                      Icons.transfer_within_a_station,
-                      color: Colors.yellow[200],
-                      size: 70,
+                  MenuIconCard(
+                    title: "Mes Transactions",
+                    image: Image(
+                      image: AssetImage("images/menu/transactions.png"),
+                      height: 50,
+                      width: 50,
                     ),
                     routePage: MyTransactions(),
                   ),
-                  MenuCard(
-                    title: Text(
-                      "Mon Agent",
-                      style: GoogleFonts.cairo(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    // cardColor: Colors.deepPurple,
-                    cardColor: Colors.deepPurple,
-                    icon: Icon(
-                      Icons.support_agent_rounded,
-                      color: Colors.yellow[200],
-                      size: 70,
+                  MenuIconCard(
+                    title: "Mon Agent",
+                    image: Image(
+                      image: AssetImage("images/menu/agents.png"),
+                      height: 50,
+                      width: 50,
                     ),
                     routePage: MyAgent(),
                   ),
-                  MenuCard(
-                    title: Text(
-                      "Rendez-Vous",
-                      style: GoogleFonts.cairo(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                    cardColor: Colors.deepPurple,
-                    icon: Icon(
-                      Icons.access_time,
-                      color: Colors.yellow[200],
-                      size: 70,
+                  MenuIconCard(
+                    title: "Rendez-vous",
+                    image: Image(
+                      image: AssetImage("images/menu/rdv.png"),
+                      height: 40,
+                      width: 50,
                     ),
                     routePage: MyAccounts(),
                   ),
@@ -302,7 +254,6 @@ class _MainPageState extends State<MainPage> {
   }
 
   /* Show not Ready message deb */
-
   void _showDialog() {
     // flutter defined function
     showDialog(
@@ -332,46 +283,60 @@ class _MainPageState extends State<MainPage> {
 
 }
 
-class MenuCard extends StatelessWidget {
-  final Text title;
-  final Icon icon;
-  final Color cardColor;
+class MenuIconCard extends StatelessWidget {
+  final String title;
+  final Image image;
   final Widget routePage;
 
-  const MenuCard({
+  const MenuIconCard({
     Key key,
     this.title,
-    this.icon,
-    this.cardColor,
+    this.image,
     this.routePage,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: cardColor,
-      elevation: 8,
-      child: Column(
-        children: [
-          SizedBox(
-            height: 15,
-          ),
-          Container(
-            child: InkWell(
-              child: icon,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => routePage),
-                );
-              },
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => routePage),
+        );
+      },
+      child: Card(
+        // color: Colors.white38,
+        color: Colors.white,
+        elevation: 6,
+        child: Center(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 20, right: 6, left: 6, bottom: 8),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 15,
+                ),
+                Container(
+                  child: image,
+                ),
+                SizedBox(
+                  height: 8,
+                ),
+                Center(
+                  child: Text(
+                    title,
+                    style: GoogleFonts.cairo(
+                        color: Colors.blue[800],
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
             ),
           ),
-          SizedBox(
-            height: 8,
-          ),
-          title,
-        ],
+        ),
       ),
     );
   }
