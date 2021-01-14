@@ -26,212 +26,213 @@ class _TontineState extends State<Tontine> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: 16),
-              Card(
-                elevation: 10,
-                margin: EdgeInsets.only(left: 8, right: 8),
-                child: Container(
-                  // padding: EdgeInsets.all(32.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.only(top: 10, left: 10),
-                            // child: Text("N°de compte: ${tontine['accId']}"),
-                            child: Text(
-                              widget.tontine != null
-                                  ? 'Compte Tontine ${widget.tontine.acc_num}'
-                                  : "Compte Tontine ...",
-                              style: GoogleFonts.cinzel(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => Carnet()));
+        },
+        child: Icon(Icons.menu_book),
+        tooltip: "Consultez votre carnet electronique",
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 16),
+            Card(
+              elevation: 10,
+              margin: EdgeInsets.only(left: 8, right: 8),
+              child: Container(
+                // padding: EdgeInsets.all(32.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.only(top: 10, left: 10),
+                          // child: Text("N°de compte: ${tontine['accId']}"),
+                          child: Text(
+                            widget.tontine != null
+                                ? 'Compte Tontine ${widget.tontine.acc_num}'
+                                : "Compte Tontine ...",
+                            style: GoogleFonts.cinzel(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ],
+                        ),
+                      ],
+                    ),
+                    ListTile(
+                      leading: Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: const Radius.circular(5.0),
+                            bottomRight: const Radius.circular(5.0),
+                            topLeft: const Radius.circular(5.0),
+                            topRight: const Radius.circular(5.0),
+                          ),
+                          image: DecorationImage(
+                            // image: NetworkImage(
+                            //     "https://1001freedownloads.s3.amazonaws.com/icon/thumb/100/Money.png"),
+                            image: AssetImage("images/Money.png"),
+                          ),
+                        ),
                       ),
-                      ListTile(
-                        leading: Container(
-                          height: 50,
-                          width: 50,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: const Radius.circular(5.0),
-                              bottomRight: const Radius.circular(5.0),
-                              topLeft: const Radius.circular(5.0),
-                              topRight: const Radius.circular(5.0),
-                            ),
-                            image: DecorationImage(
-                              // image: NetworkImage(
-                              //     "https://1001freedownloads.s3.amazonaws.com/icon/thumb/100/Money.png"),
-                              image: AssetImage("images/Money.png"),
-                            ),
-                          ),
+                      title: Text(
+                        'Solde ',
+                        style: GoogleFonts.cinzel(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
                         ),
-                        title: Text(
-                          'Solde ',
-                          style: GoogleFonts.cinzel(
-                            color: Colors.black,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Text(
-                          widget.tontine != null
-                              ? '${widget.tontine.balance} FCFA'
-                              : '... FCFA',
-                          style: GoogleFonts.lato(
-                              color: Colors.grey[600],
-                              fontSize: 15,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        trailing: InkWell(
-                          /* onTap: () {
+                      ),
+                      subtitle: Text(
+                        widget.tontine != null
+                            ? '${widget.tontine.balance} FCFA'
+                            : '... FCFA',
+                        style: GoogleFonts.lato(
+                            color: Colors.grey[600],
+                            fontSize: 15,
+                            fontWeight: FontWeight.normal),
+                      ),
+                      trailing: InkWell(
+                        /* onTap: () {
                         _showDialog();
                       }, */
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => CotisationPage(
-                                      mise: widget.tontine.mise,
-                                    )));
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.blue[800],
-                                borderRadius: BorderRadius.circular(40),
-                                boxShadow: [
-                                  //background color of box
-                                  BoxShadow(
-                                    color: Colors.blue[200],
-                                    blurRadius: 3.0, // soften the shadow
-                                    spreadRadius: 2.0, //extend the shadow
-                                    offset: Offset(
-                                      0.0, // Move to right 10  horizontally
-                                      2.0, // Move to bottom 10 Vertically
-                                    ),
-                                  )
-                                ],
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => CotisationPage(
+                                    mise: widget.tontine.mise,
+                                  )));
+                        },
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.blue[800],
+                              borderRadius: BorderRadius.circular(40),
+                              boxShadow: [
+                                //background color of box
+                                BoxShadow(
+                                  color: Colors.blue[200],
+                                  blurRadius: 3.0, // soften the shadow
+                                  spreadRadius: 2.0, //extend the shadow
+                                  offset: Offset(
+                                    0.0, // Move to right 10  horizontally
+                                    2.0, // Move to bottom 10 Vertically
+                                  ),
+                                )
+                              ],
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 15, right: 15, top: 10, bottom: 10),
+                              child: Text(
+                                'Cotiser',
+                                style: GoogleFonts.lato(
+                                    color: Colors.white,
+                                    letterSpacing: 1,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.normal),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15, right: 15, top: 10, bottom: 10),
-                                child: Text(
-                                  'Cotiser',
-                                  style: GoogleFonts.lato(
-                                      color: Colors.white,
-                                      letterSpacing: 1,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                              )),
-                        ),
-                        /*  */
+                            )),
                       ),
-                      ListTile(
-                        leading: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: const Radius.circular(5.0),
-                              bottomRight: const Radius.circular(5.0),
-                              topLeft: const Radius.circular(5.0),
-                              topRight: const Radius.circular(5.0),
-                            ),
-                            image: DecorationImage(
-                                image: AssetImage('images/recieved.png')),
+                      /*  */
+                    ),
+                    ListTile(
+                      leading: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: const Radius.circular(5.0),
+                            bottomRight: const Radius.circular(5.0),
+                            topLeft: const Radius.circular(5.0),
+                            topRight: const Radius.circular(5.0),
                           ),
-                        ),
-                        title: Text(
-                          'Derniere cotisation ',
-                          style: GoogleFonts.cinzel(
-                              color: Colors.black,
-                              letterSpacing: 0,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          'Le 17 Dec, 2020',
-                          style: GoogleFonts.lato(
-                              color: Colors.grey[600],
-                              fontSize: 13,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        trailing: Text(
-                          widget.tontine != null
-                              ? '${widget.tontine.mise} FCFA'
-                              : '... FCFA',
-                          style: GoogleFonts.lato(
-                            color: Colors.blue[600],
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                          ),
+                          image: DecorationImage(
+                              image: AssetImage('images/recieved.png')),
                         ),
                       ),
-                      ListTile(
-                        leading: Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.only(
-                              bottomLeft: const Radius.circular(5.0),
-                              bottomRight: const Radius.circular(5.0),
-                              topLeft: const Radius.circular(5.0),
-                              topRight: const Radius.circular(5.0),
-                            ),
-                            image: DecorationImage(
-                                image: AssetImage('images/retrait.png')),
-                          ),
-                        ),
-                        title: Text(
-                          'Dernier retrait ',
-                          style: GoogleFonts.cinzel(
-                              color: Colors.black,
-                              letterSpacing: 0,
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(
-                          'Le 25 Dec, 2020',
-                          style: GoogleFonts.lato(
-                              color: Colors.grey[600],
-                              fontSize: 13,
-                              fontWeight: FontWeight.normal),
-                        ),
-                        trailing: Text(
-                          '25000 FCFA',
-                          style: GoogleFonts.lato(
-                            color: Colors.blue[600],
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                          ),
+                      title: Text(
+                        'Derniere cotisation ',
+                        style: GoogleFonts.cinzel(
+                            color: Colors.black,
+                            letterSpacing: 0,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Le 17 Dec, 2020',
+                        style: GoogleFonts.lato(
+                            color: Colors.grey[600],
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal),
+                      ),
+                      trailing: Text(
+                        widget.tontine != null
+                            ? '${widget.tontine.mise} FCFA'
+                            : '... FCFA',
+                        style: GoogleFonts.lato(
+                          color: Colors.blue[600],
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                    ListTile(
+                      leading: Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: const Radius.circular(5.0),
+                            bottomRight: const Radius.circular(5.0),
+                            topLeft: const Radius.circular(5.0),
+                            topRight: const Radius.circular(5.0),
+                          ),
+                          image: DecorationImage(
+                              image: AssetImage('images/retrait.png')),
+                        ),
+                      ),
+                      title: Text(
+                        'Dernier retrait ',
+                        style: GoogleFonts.cinzel(
+                            color: Colors.black,
+                            letterSpacing: 0,
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text(
+                        'Le 25 Dec, 2020',
+                        style: GoogleFonts.lato(
+                            color: Colors.grey[600],
+                            fontSize: 13,
+                            fontWeight: FontWeight.normal),
+                      ),
+                      trailing: Text(
+                        '25000 FCFA',
+                        style: GoogleFonts.lato(
+                          color: Colors.blue[600],
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+          ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => Carnet()));
-          },
-          child: Icon(Icons.menu_book),
-          tooltip: "Consultez votre carnet electronique",
-        ));
+      ),
+    );
   }
 }

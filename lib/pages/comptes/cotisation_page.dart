@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:finance/api/api.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../models/microfinance.dart';
+import '../../services/app_services.dart';
+import '../../services/user_preferences.dart';
 
 class CotisationPage extends StatefulWidget {
   final String mise;
@@ -139,27 +146,37 @@ class _CotisationPageState extends State<CotisationPage> {
                   ),
                 ),
               ),
-              Card(
-                elevation: 8,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      child: Image(
-                          image: AssetImage("images/agent_moto.png"),
-                          height: 100,
-                          width: 100),
-                    ),
-                    Text(
-                      "Cotiser chez l'agent",
-                      style: GoogleFonts.cairo(
-                          color: Colors.blue[800],
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
+              InkWell(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(PageRouteBuilder(pageBuilder: (_, __, ___) {
+                    return CotiserAgent(
+                      mise: widget.mise,
+                    );
+                  }));
+                },
+                child: Card(
+                  elevation: 8,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: Image(
+                            image: AssetImage("images/agent_moto.png"),
+                            height: 100,
+                            width: 100),
+                      ),
+                      Text(
+                        "Cotiser chez l'agent",
+                        style: GoogleFonts.cairo(
+                            color: Colors.blue[800],
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -176,7 +193,6 @@ class _CotisationPageState extends State<CotisationPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        // return object of type Dialog
         return CupertinoAlertDialog(
           title: Text("Cotiser par " + titre),
           content: Column(
@@ -185,26 +201,15 @@ class _CotisationPageState extends State<CotisationPage> {
                 height: 8,
               ),
               Container(
-                // padding: EdgeInsets.all(6),
                 child: CupertinoTextField(
                   controller: sommeController,
                   keyboardType: TextInputType.number,
                   enabled: false,
-
                   inputFormatters: <TextInputFormatter>[
                     FilteringTextInputFormatter.digitsOnly
                   ],
                   placeholder: mise,
                   textAlign: TextAlign.center,
-                  // decoration: InputDecoration(
-                  //     // border: OutlineInputBorder(),
-                  //     border: UnderlineInputBorder(),
-                  //     labelText: "Montant",
-
-                  //     // errorText: _isLoading ? _validateEmail() : null,
-                  //     errorStyle: TextStyle(
-                  //       textBaseline: TextBaseline.ideographic,
-                  //     )),
                 ),
               ),
               SizedBox(
@@ -241,5 +246,129 @@ class _CotisationPageState extends State<CotisationPage> {
     setState(() {
       sommeController.text = "";
     });
+  }
+}
+
+/* ========================================================================== */
+class CotiserAgent extends StatefulWidget {
+  final String mise;
+
+  const CotiserAgent({Key key, this.mise}) : super(key: key);
+
+  @override
+  _CotiserAgentState createState() => _CotiserAgentState();
+}
+
+class _CotiserAgentState extends State<CotiserAgent> {
+  TextEditingController sommeController = TextEditingController();
+
+  MyAppServices get service => GetIt.I<MyAppServices>();
+  ApiResponse<Microfinance> _apiResponse;
+  bool _isLoading;
+  // Account compte;
+
+  @override
+  void initState() {
+    _fetchData(false);
+    sommeController.text = widget.mise;
+    super.initState();
+  }
+
+  _fetchData(bool getNew) async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (getNew) {
+      var newApiResp = await service.getMyMicrofinance();
+      setState(() {
+        _apiResponse = newApiResp;
+      });
+      UserPreferences().maMicrofinance = json.encode(newApiResp.data);
+    } else {
+      if (UserPreferences().maMicrofinance.toString().isEmpty) {
+        _apiResponse = await service.getMyMicrofinance();
+        UserPreferences().maMicrofinance = json.encode(_apiResponse.data);
+      } else {
+        _apiResponse = ApiResponse<Microfinance>(
+          data: Microfinance.fromJson(
+              json.decode(UserPreferences().maMicrofinance)),
+        );
+      }
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: false,
+        title: Text(
+          "Cotiser",
+          style: GoogleFonts.arya(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.normal),
+        ),
+      ),
+      body: Builder(builder: (_) {
+        if (_isLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (_apiResponse.error) {
+          return Center(
+            child: Text(_apiResponse.errorMessage),
+          );
+        }
+        return Container(
+          // padding: EdgeInsets.all(20),
+          child: Center(
+            child: SizedBox(
+              height: 200,
+              width: 300,
+              child: Card(
+                elevation: 8,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      child: CupertinoTextField(
+                        controller: sommeController,
+                        keyboardType: TextInputType.number,
+                        enabled: false,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        placeholder: widget.mise,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Container(
+                        child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Text('Cotiser'),
+                      onPressed: () {},
+                    )),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      }),
+    );
   }
 }

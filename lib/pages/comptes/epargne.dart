@@ -1,4 +1,6 @@
+import 'package:finance/models/transaction.dart';
 import 'package:finance/models/type_acc.dart';
+import 'package:finance/pages/transactions/mes_transactions.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -21,11 +23,18 @@ class _EpargneState extends State<Epargne> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (_) => MyTransactions()));
+        },
+        child: Icon(Icons.transfer_within_a_station),
+        tooltip: "Consultez vos Transactions",
+      ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(height: 16),
-
             Card(
               elevation: 10,
               margin: EdgeInsets.only(left: 8, right: 8),
@@ -170,44 +179,6 @@ class _EpargneState extends State<Epargne> {
                 ),
               ),
             ),
-            // SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 15),
-                  child: Text(
-                    'Mes Operations',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.cinzel(
-                        color: Colors.grey[700],
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ],
-            ),
-            //========= Liste of operations =========
-            /* ListView deb */
-            Container(
-              // width: 340,
-              child: ListView.builder(
-                  shrinkWrap: true,
-                  addSemanticIndexes: true,
-                  primary: false,
-                  // padding: EdgeInsets.symmetric(vertical: 12, horizontal: 25),
-                  itemBuilder: (BuildContext context, int index) {
-                    // print(opreationItem);
-                    return InkWell(
-                        onTap: () {
-                          _onButtonPressed();
-                        },
-                        child: OperationTile());
-                  },
-                  itemCount: 10),
-            ),
-            /* ListView end */
-
             SizedBox(
               height: 20,
             ),

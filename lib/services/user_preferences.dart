@@ -69,13 +69,6 @@ class UserPreferences {
   set carnet(String value) {
     _prefs.setString("moisList", value);
   }
-
-  // get moisList {
-  //   return _prefs.getString("moisList") ?? "";
-  // }
-  // set moisList(String value) {
-  //   _prefs.setString("moisList", value);
-  // }
   /* Compte Client end */
 
   /* Credit deb */
@@ -95,5 +88,17 @@ class UserPreferences {
     _prefs.setString("creditTontine", value);
   }
   /* Credit end */
+
+  /* Ma microfinance deb */
+
+  get maMicrofinance {
+    return _prefs.getString("maMicrofinance") ?? "";
+  }
+
+  set maMicrofinance(String value) {
+    _prefs.setString("maMicrofinance", value);
+  }
+
+  /* Ma microfinance end */
 
 }

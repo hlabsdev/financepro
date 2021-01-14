@@ -28,6 +28,7 @@ class Credit {
   bool is_closed;
   String start_date;
   String end_date;
+  String ask_for_loan_id;
   num created_at;
   num updated_at;
 
@@ -54,6 +55,7 @@ class Credit {
     this.is_closed,
     this.start_date,
     this.end_date,
+    this.ask_for_loan_id,
     this.created_at,
     this.updated_at,
   });

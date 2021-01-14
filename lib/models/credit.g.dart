@@ -30,6 +30,7 @@ Credit _$CreditFromJson(Map<String, dynamic> json) {
     ..is_closed = json['is_closed'] as bool
     ..start_date = json['start_date'] as String
     ..end_date = json['end_date'] as String
+    ..ask_for_loan_id = json['ask_for_loan_id'] as String
     ..created_at = json['created_at'] as num
     ..updated_at = json['updated_at'] as num;
 }
@@ -57,6 +58,7 @@ Map<String, dynamic> _$CreditToJson(Credit instance) => <String, dynamic>{
       'is_closed': instance.is_closed,
       'start_date': instance.start_date,
       'end_date': instance.end_date,
+      'ask_for_loan_id': instance.ask_for_loan_id,
       'created_at': instance.created_at,
       'updated_at': instance.updated_at
     };

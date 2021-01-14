@@ -1,0 +1,29 @@
+post{
+    https://financepro.proxymall.store/api/client/auth : {
+        "email":"email",
+        "password":"password"
+    }
+}
+get{
+    https://financepro.proxymall.store/api/client/accounts/{idUser}
+}
+
+get{
+    https://financepro.proxymall.store/api/client/microfinance/{idUser}
+}
+
+get{
+    https://financepro.proxymall.store/api/client/accounts/trasanction-liste/{idUser}
+}
+
+get{
+    https://financepro.proxymall.store/api/client/carnet-tontine/{idUser}
+}
+
+get{
+    https://financepro.proxymall.store/api/client/accounts/loan/{idUser}
+}
+
+get{
+    https://financepro.proxymall.store/api/client/account/loans/{idLoan}/detail
+}

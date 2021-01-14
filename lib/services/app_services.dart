@@ -8,6 +8,8 @@ import 'package:finance/api/api.dart';
 import 'package:finance/models/account.dart';
 import 'package:finance/models/index.dart';
 
+import '../models/microfinance.dart';
+
 class MyAppServices {
   CallAPi api = CallAPi();
   static const API = "https://financepro.proxymall.store/api/";
@@ -52,10 +54,15 @@ class MyAppServices {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
         final creditTontines = <Credit>[];
-        for (var item in jsonData["tontine_loans"]) {
-          creditTontines.add(Credit.fromJson(item));
+        if (jsonData["tontine_loans"].toString().isNotEmpty) {
+          for (var item in jsonData["tontine_loans"]) {
+            creditTontines.add(Credit.fromJson(item));
+          }
+          return ApiResponse<List<Credit>>(data: creditTontines);
+        } else {
+          return ApiResponse<List<Credit>>(
+              error: true, errorMessage: "Une erreur s'est produite!");
         }
-        return ApiResponse<List<Credit>>(data: creditTontines);
       }
       return ApiResponse<List<Credit>>(
           error: true, errorMessage: "Une erreur s'est produite!");
@@ -72,10 +79,15 @@ class MyAppServices {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
         final creditEpargne = <Credit>[];
-        for (var item in jsonData["saving_loans"]) {
-          creditEpargne.add(Credit.fromJson(item));
+        if (jsonData["saving_loans"].toString().isNotEmpty) {
+          for (var item in jsonData["saving_loans"]) {
+            creditEpargne.add(Credit.fromJson(item));
+          }
+          return ApiResponse<List<Credit>>(data: creditEpargne);
         }
-        return ApiResponse<List<Credit>>(data: creditEpargne);
+      } else {
+        return ApiResponse<List<Credit>>(
+            error: true, errorMessage: "Une erreur s'est produite!");
       }
       return ApiResponse<List<Credit>>(
           error: true, errorMessage: "Une erreur s'est produite!");
@@ -116,6 +128,9 @@ class MyAppServices {
     }).catchError((_) => ApiResponse<Payement>(
             error: true, errorMessage: "Une erreur s'est produite!"));
   }
+*/
+
+/*  
   Future<ApiResponse<bool>> createNote(NoteInsert item) {
     return http
         .post(API + '/notes',
@@ -171,5 +186,30 @@ class MyAppServices {
   //           error: true, errorMessage: "Une erreur s'est produite!"));
   // }
   /* ===== Tout ce qui concerne Carnet end ===== */
+
+  /* ===== Tout ce qui concerne La microfinance deb ===== */
+  Future<ApiResponse<Microfinance>> getMyMicrofinance() async {
+    final user = json.decode(UserPreferences().client);
+    return http
+        .get(API + "client/microfinance/${user["id"]}", headers: headers)
+        .then((data) {
+      if (data.statusCode == 200) {
+        final jsonData = json.decode(data.body);
+
+        final myMicrofin = Microfinance.fromJson(jsonData["microfinance"]);
+        return ApiResponse<Microfinance>(
+          data: myMicrofin,
+        );
+      }
+      return ApiResponse<Microfinance>(
+        error: true,
+        errorMessage: "Une erreur s'est produite!",
+      );
+    }).catchError((_) => ApiResponse<Microfinance>(
+              error: true,
+              errorMessage: "Une erreur s'est produite!",
+            ));
+  }
+  /* ===== Tout ce qui concerne La microfinance end ===== */
 
 }

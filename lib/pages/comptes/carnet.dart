@@ -16,7 +16,6 @@ class Carnet extends StatefulWidget {
 class _CarnetState extends State<Carnet> {
   MyAppServices get service => GetIt.I<MyAppServices>();
 
-  var userData;
   ApiResponse<List<Mois>> _apiResponse;
   bool _isLoading;
   // Account compte;
@@ -43,6 +42,7 @@ class _CarnetState extends State<Carnet> {
         UserPreferences().carnet = json.encode(_apiResponse.data);
       } else {
         var listMois = <Mois>[];
+        print(json.decode(UserPreferences().carnet));
         for (var index in json.decode(UserPreferences().carnet)) {
           // listMois.add(Mois.fromJson(json.decode(index)));
           listMois.add(Mois.fromJson(index));
@@ -88,7 +88,24 @@ class _CarnetState extends State<Carnet> {
         }
         if (_apiResponse.error) {
           return Center(
-            child: Text(_apiResponse.errorMessage),
+            child: Text(
+              _apiResponse.errorMessage,
+              style: GoogleFonts.lato(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.normal),
+            ),
+          );
+        }
+        if (_apiResponse.data.isEmpty) {
+          return Center(
+            child: Text(
+              "Aucune donnée pour le moment",
+              style: GoogleFonts.lato(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.normal),
+            ),
           );
         }
         return SingleChildScrollView(

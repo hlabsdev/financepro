@@ -110,6 +110,8 @@ class _LoginState extends State<Login> {
   void _handleLogin() {
     setState(() {
       _isLoading = true;
+    });
+    setState(() {
       if (_isAllValidate) {
         api
             .login(_mailController.text, _passwordController.text)
@@ -202,10 +204,7 @@ class _LoginState extends State<Login> {
       padding: EdgeInsets.all(10),
 
       borderRadius: 8,
-      backgroundGradient: LinearGradient(
-        colors: [Colors.red.shade800, Colors.redAccent.shade700],
-        stops: [0.6, 1],
-      ),
+      // backgroundGradient: LinearGradient(),
       boxShadows: [
         BoxShadow(
           color: Colors.black45,

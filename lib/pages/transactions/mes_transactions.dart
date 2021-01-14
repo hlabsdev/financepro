@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ussd/ussd.dart';
-// import 'package:ussd_service/ussd_service.dart';
 
 class MyTransactions extends StatefulWidget {
   @override
@@ -13,22 +12,6 @@ void initState() {
   // super.initState();
 }
 
-/* makeMyRequest(String code) async {
-  int subscriptionId = 2; // sim card subscription ID
-  //String code = "*444#"; // ussd code payload
-  try {
-    String ussdResponseMessage = await UssdService.makeRequest(
-      subscriptionId,
-      code,
-      Duration(seconds: 10), // timeout (optional) - default is 10 seconds
-    );
-    print("succes! message: $ussdResponseMessage");
-  } catch(e) {
-    debugPrint("error! code: ${e.code} - message: ${e.message}");
-  }
-}
- */
-
 class _MyTransactionsState extends State<MyTransactions> {
   String _selectedItem = "";
 
@@ -36,33 +19,68 @@ class _MyTransactionsState extends State<MyTransactions> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        centerTitle: false,
         title: Text(
-          "Mes Transactions detaillées",
+          "Details des Transactions",
           style: GoogleFonts.arya(
               fontSize: 20,
               fontWeight: FontWeight.bold,
               fontStyle: FontStyle.normal),
         ),
       ),
-      body: Container(
-        child: ListView.builder(
-          /* separatorBuilder: (context, index) {
-            return SizedBox(height: 10);
-          }, */
-          itemBuilder: (BuildContext context, int index) {
-            // print(opreationItem);
-            return InkWell(
-                onTap: () {
-                  _onButtonPressed();
-                },
-                child: OperationTile());
-          },
-          itemCount: 10,
-          padding: EdgeInsets.only(bottom: 20),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            ListTile(
+              tileColor: Colors.grey,
+              title: Text(
+                "Operation de Depots",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              primary: false,
+              /* separatorBuilder: (context, index) {
+                          return SizedBox(height: 10);
+                    }, */
+              itemBuilder: (BuildContext context, int index) {
+                // print(opreationItem);
+                return InkWell(
+                    onTap: () {
+                      _onButtonPressed();
+                    },
+                    child: OperationTile());
+              },
+              itemCount: 10,
+              padding: EdgeInsets.only(bottom: 20),
+            ),
+            ListTile(
+              tileColor: Colors.grey,
+              title: Text(
+                "Operation de Retraits",
+                textAlign: TextAlign.center,
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              primary: false,
+              /* separatorBuilder: (context, index) {
+                          return SizedBox(height: 10);
+                    }, */
+              itemBuilder: (BuildContext context, int index) {
+                // print(opreationItem);
+                return InkWell(
+                    onTap: () {
+                      _onButtonPressed();
+                    },
+                    child: OperationTile());
+              },
+              itemCount: 10,
+              padding: EdgeInsets.only(bottom: 20),
+            ),
+          ],
         ),
-        // margin: EdgeInsets.only(bottom: 20),
-        // padding: EdgeInsets.only(bottom: 20),
       ),
     );
   }
@@ -124,8 +142,13 @@ class _MyTransactionsState extends State<MyTransactions> {
 /* hors classe */
 
 class OperationTile extends StatelessWidget {
+  final String date;
+  final String montant;
+
   const OperationTile({
     Key key,
+    this.date,
+    this.montant,
   }) : super(key: key);
 
   @override
@@ -180,6 +203,7 @@ class OperationTile extends StatelessWidget {
           ),
           subtitle: Text(
             '17 Dec, 2020',
+            /* Utils().displayDate(_creditEpargne.data[index].start_date) */
             style: GoogleFonts.lato(
                 color: Colors.grey[600],
                 fontSize: 13,
