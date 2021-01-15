@@ -1,19 +1,15 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:finance/api/api.dart';
-import 'package:flutter/material.dart';
+import 'package:finance/pages/mainpage.dart';
+import 'package:finance/pages/widgets/bezierContainer.dart';
 import 'package:flushbar/flushbar.dart';
-
-import 'mainpage.dart';
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Login extends StatefulWidget {
-  final bool isMain;
+  Login({Key key, this.isMain = false, this.title}) : super(key: key);
 
-  const Login({
-    Key key,
-    this.isMain = false,
-  }) : super(key: key);
+  final String title;
+  final bool isMain;
 
   @override
   _LoginState createState() => _LoginState();
@@ -137,66 +133,6 @@ class _LoginState extends State<Login> {
     });
   }
 
-/* 
-  void _handleLogin() async {
-    if (!_isAllValidate) {
-      showDismissableFlushbar(context, "Saisie invalide",
-          "Ressaisissez avec des données valide!", false);
-    } else {
-      setState(() {
-        _isLoading = true;
-      });
-      var data = {
-        "email": _mailController.text,
-        // "username": mailController.text,
-        "password": _passwordController.text,
-      };
-      // var res = await CallAPi().postData(data, "get_token/");
-      var res = await CallAPi().postData(data, "client/auth");
-      var status = res.statusCode;
-      var body = json.decode(res.body);
-
-      // if (status == 200) {
-      if (body.toString().contains("token")) {
-        // if (body["status_code"] == 200) {
-        print(body);
-
-        SharedPreferences localStorage = await SharedPreferences.getInstance();
-        localStorage.setString("token", body["token"]);
-        localStorage.setString("client", json.encode(body["client"]));
-        var route = new MaterialPageRoute(
-          builder: (BuildContext context) => MainPage(),
-        );
-        Navigator.of(context).push(route);
-      } else /* if (body["error_status"] == 400) */ {
-        showDismissableFlushbar(
-            context,
-            "Une erreur s'est produite",
-            "Données invalide, ou mauvaise connexion. Veuillez reessayer avec des données correct ou avec un meilleure connexion",
-            true);
-      }
-      // }
-      /* if (status == 500) {
-        showDismissableFlushbar(
-            context,
-            "Une erreur s'est produite",
-            "Le serveur ne repond pas, Veuillez reessayer dans quelques instants!",
-            false);
-      }
-      if (status == 0) {
-        showDismissableFlushbar(
-            context,
-            "Erreur de connexion",
-            "Il semble que vous n'etes pas connecté ou que votre connexion est mauvaise.",
-            false);
-      } */
-    }
-    setState(() {
-      _isLoading = false;
-      _isAllValidate = false;
-    });
-  }
- */
   void showDismissableFlushbar(BuildContext context, String errorTitle,
       String errorText, bool eraseCases) {
     Flushbar(
@@ -204,10 +140,11 @@ class _LoginState extends State<Login> {
       padding: EdgeInsets.all(10),
 
       borderRadius: 8,
+      backgroundColor: Colors.redAccent,
       // backgroundGradient: LinearGradient(),
       boxShadows: [
         BoxShadow(
-          color: Colors.black45,
+          color: Colors.redAccent,
           offset: Offset(3, 3),
           blurRadius: 3,
         ),
@@ -226,113 +163,187 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Widget _entryField(String title, {bool isPassword = false}) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+              obscureText: isPassword,
+              controller: isPassword ? _passwordController : _mailController,
+              onChanged: (value) {
+                _validateAll();
+              },
+              decoration: InputDecoration(
+                  errorText: isPassword
+                      ? _isLoading
+                          ? _validatePassword()
+                          : null
+                      : _isLoading
+                          ? _validateEmail()
+                          : null,
+                  border: new OutlineInputBorder(
+                    borderRadius: const BorderRadius.all(
+                      const Radius.circular(10.0),
+                    ),
+                    borderSide: BorderSide(
+                      width: 0,
+                      style: BorderStyle.none,
+                    ),
+                  ),
+                  icon: isPassword ? Icon(Icons.security) : Icon(Icons.email),
+                  hintText: isPassword
+                      ? "votre mot de passe ici..."
+                      : "votre courrier email ici ...",
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true))
+        ],
+      ),
+    );
+  }
+
+  Widget _submitButton() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 15),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.grey.shade200,
+                offset: Offset(2, 4),
+                blurRadius: 5,
+                spreadRadius: 2)
+          ],
+          gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Colors.purpleAccent, Colors.deepPurpleAccent])),
+      child: RaisedButton(
+        child: Text(
+          'Se Connecter',
+          style: TextStyle(fontSize: 30, fontFamily: "arial"),
+        ),
+        textColor: Colors.white,
+        color: Colors.transparent,
+        elevation: 0,
+        onPressed: () {
+          _isAllValidate
+              ? _handleLogin()
+              : showDismissableFlushbar(context, "Pas de saisie",
+                  "Saisissez quelque chose avant de valider", false);
+        },
+      ),
+    );
+  }
+
+  Widget _divider() {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        children: <Widget>[
+          SizedBox(
+            width: 20,
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Divider(
+                thickness: 1,
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  //logo aluksons
+  Widget _title() {
+    return Container(
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(10),
+      child: Image(
+        image: AssetImage("images/logo.png"),
+      ),
+    );
+  }
+
+  Widget _emailPasswordWidget() {
+    return Column(
+      children: <Widget>[
+        _entryField("Email"),
+        _entryField("Mot de passe", isPassword: true),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () => exit(0),
-      child: Scaffold(
-          body: Center(
-        child: Padding(
-            padding: EdgeInsets.all(10),
-            child: ListView(
-              children: <Widget>[
-                SizedBox(
-                  height: 50,
-                ),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.all(10),
-                  child: Image(
-                    image: AssetImage("images/logo.png"),
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+        body: Container(
+      height: height,
+      child: Stack(
+        children: <Widget>[
+          Positioned(
+              top: -height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer()),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  SizedBox(height: height * .2),
+                  _title(),
+                  Text(
+                    _isLoading ? "Connection..." : 'Connectez-vous',
+                    style: TextStyle(fontSize: 30),
                   ),
-                ),
-                Container(
+                  SizedBox(height: 50),
+                  _emailPasswordWidget(),
+                  SizedBox(height: 20),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
                     alignment: Alignment.center,
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      _isLoading ? "Connection..." : 'Connectez-vous',
-                      style: TextStyle(
-                        fontSize: 20,
-                      ),
-                    )),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: _mailController,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: "Email",
-                        icon: Icon(
-                          Icons.mail,
-                          color: Colors.grey,
-                        ),
-                        // errorText: _validateEmail(),
-                        errorText: _isLoading ? _validateEmail() : null,
-                        errorStyle: TextStyle(
-                          textBaseline: TextBaseline.ideographic,
-                        )),
+                    child: Text('Vous avez oublié le mot de passe ?',
+                        style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.purpleAccent,
+                            fontWeight: FontWeight.w500)),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: TextField(
-                    obscureText: true,
-                    controller: _passwordController,
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: "Mot de Passe",
-                      icon: Icon(
-                        Icons.lock,
-                        color: Colors.grey,
-                      ),
-                      errorText: _isLoading ? _validatePassword() : null,
-                      // errorText: _validatePassword(),
-                    ),
-                    onChanged: (value) {
-                      _validateAll();
-                    },
-                    // onSubmitted: (value) {
-                    //   _validateAll();
-                    // },
-                  ),
-                ),
-                FlatButton(
-                  onPressed: () {
-                    //forgot password screen
-                  },
-                  textColor: Colors.teal,
-                  child: Text("Vous avez oublié le mot de passe ?"),
-                ),
-                SizedBox(
-                  height: 8,
-                ),
-                Container(
-                    height: 50,
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
-                      child: Text('Login'),
-                      onPressed: () {
-                        _isAllValidate
-                            ? _handleLogin()
-                            : showDismissableFlushbar(
-                                context,
-                                "Pas de saisie",
-                                "Saisiessez quelque chose avant de valider",
-                                false);
-                      },
-                    )),
-                SizedBox(
-                  height: 8,
-                ),
-              ],
-            )),
-      )),
-    );
+                  _divider(),
+                  _submitButton(),
+                  SizedBox(height: height * .055),
+                ],
+              ),
+            ),
+          ),
+          //Positioned(top: 40, left: 0, child: _backButton()),
+        ],
+      ),
+    ));
   }
 }

@@ -2,34 +2,112 @@ import 'dart:async';
 
 import 'package:finance/pages/login.dart';
 import 'package:finance/pages/mainpage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intro_slider/intro_slider.dart';
+import 'package:intro_slider/slide_object.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class SplashScreen extends StatefulWidget {
+class IntroScreen extends StatefulWidget {
   @override
-  _SplashScreenState createState() => _SplashScreenState();
+  _IntroScreenState createState() => _IntroScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
-  bool _isLogged;
+class _IntroScreenState extends State<IntroScreen> {
+  List<Slide> slides = new List();
+  bool _isLogged = false;
 
   @override
   void initState() {
     super.initState();
     _incrementStartup();
     loadData();
+
+    slides.add(
+      new Slide(
+          heightImage: 80,
+          marginTitle: EdgeInsets.all(50),
+          title: "BIENVENUE A MICROFINANCE PRO",
+          maxLineTitle: 3,
+          maxLineTextDescription: 5,
+          description: "Aluksons Business Solutions"
+              " vous offre Microfinance Pro "
+              "Une Plateforme ultra sécurisée qui"
+              " vous rend la vie facile.",
+          pathImage: "images/logo.png",
+          backgroundImage: "images/slider1.jpg"),
+    );
+    slides.add(
+      new Slide(
+        title: "SUIVIT DE TONTINE",
+        maxLineTitle: 2,
+        maxLineTextDescription: 5,
+        marginTitle: EdgeInsets.all(50),
+        description: "Microfinance pro donne un avantage"
+            " de suivit de vos cotisations journalière"
+            " et vous évite tout autre confusion à l'avenir.",
+        //pathImage: "images/logo.png",
+        //backgroundColor: Color(0xff203152),
+        backgroundImage: "images/slider2.png",
+      ),
+    );
+    slides.add(
+      new Slide(
+        title: "APPELEZ VOS AGENTS DE TONTINE",
+        maxLineTitle: 3,
+        maxLineTextDescription: 5,
+        marginTitle: EdgeInsets.all(50),
+        description: "Microfinance pro donne un avantage"
+            " en mettant à votre disposition le moyen "
+            " de comminuquer avec vos agents et de "
+            " faire valider vos cotisations instantannément.",
+        //pathImage: "images/logo.png",
+        //backgroundColor: Color(0xff203152),
+        backgroundImage: "images/slider4.gif",
+      ),
+    );
+    slides.add(
+      new Slide(
+        maxLineTitle: 3,
+        maxLineTextDescription: 5,
+        marginTitle: EdgeInsets.all(50),
+        title: "CARNET ELECTRONIQUE",
+        description: "Avec Microfinance Pro vous avez à votre"
+            " disposition un carnet électronique qui "
+            "vous permet de consulter votre position "
+            "de chaque mois de l'année.",
+        //pathImage: "images/logo.png",
+        //backgroundColor: Color(0xff9932CC),
+        backgroundImage: "images/slider3.gif",
+      ),
+    );
   }
 
-  Future<Timer> loadData() async {
+  Future<void> loadData() async {
     SharedPreferences localData = await SharedPreferences.getInstance();
     setState(() {
       localData.containsKey("token") ? _isLogged = true : _isLogged = false;
     });
-
-    return new Timer(const Duration(seconds: 5), onDoneLoading);
   }
 
-  onDoneLoading() async {
+  Future<void> _incrementStartup() async {
+    final pref = await SharedPreferences.getInstance();
+    int lastStartupNumber = await _getStartupNumber();
+    int currentStartupNumber = ++lastStartupNumber;
+
+    await pref.setInt("startupNumber", currentStartupNumber);
+  }
+
+  Future<int> _getStartupNumber() async {
+    final pref = await SharedPreferences.getInstance();
+    final startupNumber = pref.getInt('startupNumber');
+    if (startupNumber == null) {
+      return 0;
+    }
+    return startupNumber;
+  }
+
+  void onDonePress() {
     Navigator.of(context).pushReplacement(PageRouteBuilder(
         maintainState: true,
         opaque: true,
@@ -45,44 +123,11 @@ class _SplashScreenState extends State<SplashScreen> {
     // dispose();
   }
 
-/* test deb */
-  /* get the startupNumber deb */
-  Future<int> _getStartupNumber() async {
-    final pref = await SharedPreferences.getInstance();
-    final startupNumber = pref.getInt('startupNumber');
-    if (startupNumber == null) {
-      return 0;
-    }
-    return startupNumber;
-  }
-
-  Future<void> _resetStartupNumber() async {
-    final pref = await SharedPreferences.getInstance();
-    await pref.setInt('startupNumber', 0);
-  }
-
-  Future<void> _incrementStartup() async {
-    final pref = await SharedPreferences.getInstance();
-    int lastStartupNumber = await _getStartupNumber();
-    int currentStartupNumber = ++lastStartupNumber;
-
-    await pref.setInt("startupNumber", currentStartupNumber);
-  }
-
-/* test end */
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        image: DecorationImage(
-            image: AssetImage('images/splash.png'), fit: BoxFit.cover),
-      ),
-      // child: Center(
-      //   child: CircularProgressIndicator(
-      //     valueColor: AlwaysStoppedAnimation<Color>(Colors.deepPurple),
-      //   ),
-      // ),
+    return new IntroSlider(
+      slides: this.slides,
+      onDonePress: this.onDonePress,
     );
   }
 }

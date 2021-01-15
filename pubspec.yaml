@@ -36,6 +36,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   flushbar: ^1.10.4
   ussd: ^0.0.2+1
+  intro_slider: ^2.3.3
   # ussd_service: ^0.1.0+4
   expansion_tile_card: ^1.1.0
   get_it: ^5.0.3

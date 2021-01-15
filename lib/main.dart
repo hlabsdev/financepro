@@ -5,6 +5,8 @@ import 'package:get_it/get_it.dart';
 import 'package:finance/pages/splash.dart';
 import 'package:finance/services/app_services.dart';
 
+import 'pages/splash.dart';
+
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => MyAppServices());
   // GetIt.instance.registerLazySingleton(() => {
@@ -35,7 +37,7 @@ class MyApp extends StatelessWidget {
       //primarySwatch: Colors.black,
       //visualDensity: VisualDensity.adaptivePlatformDensity,
       //),
-      home: SplashScreen(),
+      home: IntroScreen(),
       // routes: <String, WidgetBuilder>{
       //   '/login': (BuildContext context) => new Login(),
       //   '/mainpage': (BuildContext context) => new MainPage(),
