@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/pages/rendez-vous/rendez_vous.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -144,34 +145,30 @@ class _MainPageState extends State<MainPage> {
               ),
               leading: const Icon(Icons.question_answer),
               onTap: () {
-                _showDialog();
+                _showDialog("Bientot Diosponible", "En cours de developpement.", false);
               },
             ),
             Divider(
               height: 2,
             ),
+            /*
             ListTile(
               title: Text(
                 "Parametres",
               ),
               leading: const Icon(Icons.settings),
               onTap: () {
-                _showDialog();
+                _showDialog("Bientot Diosponible");
                 // Navigator.pop(context);
               },
-            ),
+            ),*/
             ListTile(
               title: Text(
                 "Deconnexion",
               ),
               leading: const Icon(Icons.logout),
               onTap: () {
-                CallAPi().logout();
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
+                _showDialog("Etes-vous sur?", "Voulez-vous vraiment vous deconnecter!?", true);
               },
             ),
           ],
@@ -242,7 +239,7 @@ class _MainPageState extends State<MainPage> {
                       height: 40,
                       width: 50,
                     ),
-                    routePage: MyAccounts(),
+                    routePage: RendezVous(),
                   ),
                 ],
               ),
@@ -254,26 +251,34 @@ class _MainPageState extends State<MainPage> {
   }
 
   /* Show not Ready message deb */
-  void _showDialog() {
+  void _showDialog(String titre, String text, bool isDecon) {
     // flutter defined function
     showDialog(
       context: context,
       builder: (BuildContext context) {
         // return object of type Dialog
         return AlertDialog(
-          title: Text("Effectuez votre cotisation"),
-          content: SizedBox(
-            height: 130,
-            child: Text("En cours de developpement (^-^)"),
-          ),
+          title: Text(titre),
+          content: Text(text),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
-              child: Text("Close"),
+              child: Text("Fermer"),
               onPressed: () {
                 Navigator.of(context).pop();
               },
             ),
+            isDecon ? FlatButton(
+              child: Text("Valider"),
+              onPressed: () {
+                CallAPi().logout();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Login()),
+                );
+              },
+            ): null,
           ],
         );
       },

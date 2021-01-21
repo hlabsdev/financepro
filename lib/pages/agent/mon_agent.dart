@@ -4,7 +4,6 @@ import 'package:finance/api/api.dart';
 import 'package:finance/models/account.dart';
 import 'package:finance/services/app_services.dart';
 import 'package:finance/services/user_preferences.dart';
-import 'package:finance/utils/refreshable_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -110,17 +109,15 @@ class _MyAgentState extends State<MyAgent> {
             ),
           );
         }
-        return SingleChildScrollView(
-          child: Center(
-              child: Text(
-            "Bientot Disponible (-_-)",
-            style: GoogleFonts.arya(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-            ),
-            textAlign: TextAlign.center,
-          )),
-        );
+        return Center(
+            child: Text(
+          "Bientot Disponible (-_-)",
+          style: GoogleFonts.arya(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ));
       }),
     );
   }
