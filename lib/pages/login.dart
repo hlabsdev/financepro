@@ -106,8 +106,6 @@ class _LoginState extends State<Login> {
   void _handleLogin() {
     setState(() {
       _isLoading = true;
-    });
-    setState(() {
       if (_isAllValidate) {
         api
             .login(_mailController.text, _passwordController.text)
@@ -126,10 +124,6 @@ class _LoginState extends State<Login> {
           }
         });
       }
-    });
-
-    setState(() {
-      _isLoading = false;
     });
   }
 

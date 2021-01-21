@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:finance/pages/login.dart';
 import 'package:finance/pages/mainpage.dart';
+import 'package:finance/services/user_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intro_slider/intro_slider.dart';
@@ -21,6 +22,10 @@ class _IntroScreenState extends State<IntroScreen> {
   void initState() {
     super.initState();
     _incrementStartup();
+    /*
+    if (_getStartupNumber() > 1){
+      onDonePress();
+    }*/
     loadData();
 
     slides.add(
@@ -98,9 +103,8 @@ class _IntroScreenState extends State<IntroScreen> {
     await pref.setInt("startupNumber", currentStartupNumber);
   }
 
-  Future<int> _getStartupNumber() async {
-    final pref = await SharedPreferences.getInstance();
-    final startupNumber = pref.getInt('startupNumber');
+  int _getStartupNumber() {
+    final int startupNumber = UserPreferences().startupNumber;
     if (startupNumber == null) {
       return 0;
     }
@@ -128,6 +132,7 @@ class _IntroScreenState extends State<IntroScreen> {
     return new IntroSlider(
       slides: this.slides,
       onDonePress: this.onDonePress,
+
     );
   }
 }

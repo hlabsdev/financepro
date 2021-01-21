@@ -14,6 +14,16 @@ class UserPreferences {
     _prefs = await SharedPreferences.getInstance();
   }
 
+  /* Startup number deb */
+  get startupNumber {
+    return _prefs.getString("startupNumber") ?? "";
+  }
+
+  set startupNumber(String value) {
+    _prefs.setString("startupNumber", value);
+  }
+  /* Startup number end */
+
   /* Authentication deb */
   get client {
     return _prefs.getString("client") ?? "";

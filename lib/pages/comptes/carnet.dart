@@ -4,6 +4,7 @@ import 'package:finance/api/api.dart';
 import 'package:finance/models/index.dart';
 import 'package:finance/services/app_services.dart';
 import 'package:finance/services/user_preferences.dart';
+import 'package:finance/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -125,26 +126,68 @@ class _CarnetState extends State<Carnet> {
                     onTap: () => {
                       Navigator.of(context)
                           .push(PageRouteBuilder(pageBuilder: (_, __, ___) {
-                        return MoisDetailGrid();
+                        return MoisDetailGrid(
+                          month: _apiResponse.data[index].month,
+                          position: _apiResponse.data[index].position,
+                        );
                       }))
                     },
                     child: ListTile(
+                      tileColor: Colors.black12,
                       autofocus: true,
                       focusNode: FocusNode(canRequestFocus: true),
-                      title: Text(
-                        _apiResponse.data != null
-                            ? 'Mois ${_apiResponse.data[index].month}'
-                            : "Mois ...",
+                      title: Row(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [Text(
+                                  _apiResponse.data != null
+                                      ? Utils().parseMonh(_apiResponse.data[index].month)
+                                      : "Mois ...",
+                                ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    _apiResponse.data != null
+                                        ? '${_apiResponse.data[index].year}'
+                                        : "Année ...",
+                                  ),
+                                ],
+                              ),
+                              Text(
+                                _apiResponse.data != null
+                                    ? 'Position: Jour ${_apiResponse.data[index].position}'
+                                    : "Position ...",
+                              ),
+                            ],
+                          ),
+                          SizedBox(width: 5,),
+                          Text("|", style: TextStyle(fontSize: 35),),
+                          SizedBox(width: 5,),
+                          Column(
+                            // crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text("Solde", style: TextStyle(color: Colors.green[600], fontWeight: FontWeight.bold),),
+                              Text(
+                                _apiResponse.data != null
+                                    ? ' ${_apiResponse.data[index].mise * (_apiResponse.data[index].position-1)}'
+                                    : "... FCFA"
+                                  , style: TextStyle(color: Colors.green[600], fontWeight: FontWeight.bold),
+                              ),
+
+                            ],
+                          )
+                        ],
                       ),
                       leading: Icon(
                         Icons.date_range_rounded,
-                        color: Colors.blueAccent[500],
+                        color: Colors.deepPurple[500],
                       ),
-                      subtitle: Text(
-                        _apiResponse.data != null
-                            ? 'Position: Jour ${_apiResponse.data[index].position}'
-                            : "Position ...",
-                      ),
+
                       trailing: Padding(
                         padding: const EdgeInsets.symmetric(
                             vertical: 8.0, horizontal: 0.0),
@@ -186,8 +229,13 @@ class _CarnetState extends State<Carnet> {
 }
 
 class MoisDetailGrid extends StatelessWidget {
+  final int month;
+  final int position;
+
   const MoisDetailGrid({
     Key key,
+    this.month,
+    this.position,
   }) : super(key: key);
 
   @override
@@ -195,7 +243,7 @@ class MoisDetailGrid extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Deatil du mois",
+          "Details de "+ Utils().parseMonh(month),
           style: GoogleFonts.arya(
             fontSize: 25,
             fontWeight: FontWeight.bold,
@@ -214,12 +262,17 @@ class MoisDetailGrid extends StatelessWidget {
               SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
           itemBuilder: ((BuildContext context, int index) {
             return new Card(
-              color: Colors.blueAccent,
+              color: Colors.white70,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 5),
                 child: new GridTile(
-                  footer: Center(child: new Text("Jour ${index + 1}")),
-                  child: new Icon(
+                  footer: Center(child: new Text("Jour ${index + 1}", style: TextStyle(color: Colors.black),)),
+                  child: (index+1) - position >0? new Icon(
+                    Icons.cancel,
+                    color: Colors.redAccent,
+
+                  ):
+                  new Icon(
                     Icons.check_circle,
                     color: Colors.green,
                   ),
