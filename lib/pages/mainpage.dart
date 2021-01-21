@@ -145,7 +145,7 @@ class _MainPageState extends State<MainPage> {
               ),
               leading: const Icon(Icons.question_answer),
               onTap: () {
-                _showDialog("Bientot Diosponible", "En cours de developpement.", false);
+                _showDialog("Bientot Diosponible", "En cours de developpement...", false);
               },
             ),
             Divider(
