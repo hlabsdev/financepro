@@ -111,4 +111,39 @@ class UserPreferences {
 
   /* Ma microfinance end */
 
+  /* Transactions deb */
+  get depotEpargne {
+    return _prefs.getString("depotEpargne") ?? "";
+  }
+
+  set depotEpargne(String value) {
+    _prefs.setString("depotEpargne", value);
+  }
+
+  get retraitEpargne {
+    return _prefs.getString("retraitEpargne") ?? "";
+  }
+
+  set retraitEpargne(String value) {
+    _prefs.setString("retraitEpargne", value);
+  }
+
+  get depotTontine {
+    return _prefs.getString("depotTontine") ?? "";
+  }
+
+  set depotTontine(String value) {
+    _prefs.setString("depotTontine", value);
+  }
+
+  get retraitTontine {
+    return _prefs.getString("retraitTontine") ?? "";
+  }
+
+  set retraitTontine(String value) {
+    _prefs.setString("retraitTontine", value);
+  }
+
+  /* Transactions end */
+
 }

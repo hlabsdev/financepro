@@ -18,6 +18,7 @@ class Type_acc {
   num block_period;
   String block_end_date;
   String mise;
+  String soft_delete;
   num created_at;
   num updated_at;
 
@@ -34,6 +35,7 @@ class Type_acc {
     this.block_period,
     this.block_end_date,
     this.mise,
+    this.soft_delete,
     this.created_at,
     this.updated_at,
   });

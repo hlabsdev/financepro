@@ -25,12 +25,10 @@ class _MesCreditState extends State<MesCredit> {
   ApiResponse<List<Credit>> _creditEpargne;
   ApiResponse<List<Credit>> _creditTontine;
   bool _isLoading;
-  // Account compte;
 
   @override
   void initState() {
     _fetchCreditEpg(false);
-    // _fetchCreditTne(false);
     super.initState();
   }
 
@@ -71,7 +69,6 @@ class _MesCreditState extends State<MesCredit> {
         var creditTn = <Credit>[];
         print(json.decode(UserPreferences().creditTontine));
         for (var index in json.decode(UserPreferences().creditTontine)) {
-          // creditEpargnes.add(Mois.fromJson(json.decode(index)));
           creditTn.add(Credit.fromJson(index));
         }
         _creditTontine = ApiResponse<List<Credit>>(
@@ -84,39 +81,6 @@ class _MesCreditState extends State<MesCredit> {
       _isLoading = false;
     });
   }
-
-  // _fetchCreditTne(bool getNew) async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   if (getNew) {
-  //     var newApiCT = await service.getCreditTontineList();
-  //     setState(() {
-  //       _creditTontine = newApiCT;
-  //     });
-  //     UserPreferences().creditTontine = json.encode(newApiCT.data);
-  //   } else {
-  //     if (UserPreferences().creditTontine.toString().isEmpty) {
-  //       _creditTontine = await service.getCreditTontineList();
-  //       UserPreferences().creditTontine = json.encode(_creditTontine.data);
-  //     } else {
-  //       /* Credit Tontine */
-  //       var creditTn = <Credit>[];
-  //       print(json.decode(UserPreferences().creditTontine));
-  //       for (var index in json.decode(UserPreferences().creditTontine)) {
-  //         // creditEpargnes.add(Mois.fromJson(json.decode(index)));
-  //         creditTn.add(Credit.fromJson(index));
-  //       }
-  //       _creditEpargne = ApiResponse<List<Credit>>(
-  //         data: creditTn,
-  //       );
-  //     }
-  //   }
-
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {

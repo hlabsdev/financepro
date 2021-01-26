@@ -9,10 +9,6 @@ import 'pages/splash.dart';
 
 void setupLocator() {
   GetIt.instance.registerLazySingleton(() => MyAppServices());
-  // GetIt.instance.registerLazySingleton(() => {
-  //       AccountService(),
-  //       CreditService(),
-  //     });
 }
 
 void main() async {
@@ -32,17 +28,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       darkTheme: ThemeData.dark(),
-      //darkTheme: ThemeData(
-      //brightness: Brightness.dark,
-      //primarySwatch: Colors.black,
-      //visualDensity: VisualDensity.adaptivePlatformDensity,
-      //),
       home: IntroScreen(),
-      // routes: <String, WidgetBuilder>{
-      //   '/login': (BuildContext context) => new Login(),
-      //   '/mainpage': (BuildContext context) => new MainPage(),
-      //   '/profile': (BuildContext context) => new Profile(),
-      // },
     );
   }
 }

@@ -166,25 +166,6 @@ class MyAppServices {
     }).catchError((_) => ApiResponse<List<Mois>>(
             error: true, errorMessage: "Une erreur s'est produite!"));
   }
-
-  // Future<ApiResponse<List<Payement>>> getDetailMois(String creditID) {
-  //   return http
-  //       .get(API + "client/account/loans/" + creditID + "/detail",
-  //           headers: headers)
-  //       .then((data) {
-  //     if (data.statusCode == 200) {
-  //       final jsonData = json.decode(data.body);
-  //       final payements = <Payement>[];
-  //       for (var item in jsonData["repayments"]) {
-  //         payements.add(Payement.fromJson(item));
-  //       }
-  //       return ApiResponse<List<Payement>>(data: payements);
-  //     }
-  //     return ApiResponse<List<Payement>>(
-  //         error: true, errorMessage: "Une erreur s'est produite!");
-  //   }).catchError((_) => ApiResponse<List<Payement>>(
-  //           error: true, errorMessage: "Une erreur s'est produite!"));
-  // }
   /* ===== Tout ce qui concerne Carnet end ===== */
 
   /* ===== Tout ce qui concerne La microfinance deb ===== */
@@ -211,5 +192,104 @@ class MyAppServices {
             ));
   }
   /* ===== Tout ce qui concerne La microfinance end ===== */
+
+
+  /* ===== Tout ce qui concerne Les Transactions deb ===== */
+Future<ApiResponse<List<Transaction>>> getTontineRetrait() {
+  final user = json.decode(UserPreferences().client);
+  return http
+      .get(API + "client/accounts/transaction-liste/${user["id"]}", headers: headers)
+      .then((data) {
+    if (data.statusCode == 200) {
+      final jsonData = json.decode(data.body);
+      final tontineRetrait = <Transaction>[];
+      if (jsonData["transactions"]["tontine"]["withdrawals"].toString().isNotEmpty) {
+        for (var item in jsonData["transactions"]["tontine"]["withdrawals"]) {
+          tontineRetrait.add(Transaction.fromJson(item));
+        }
+        return ApiResponse<List<Transaction>>(data: tontineRetrait);
+      } else {
+        return ApiResponse<List<Transaction>>(
+            error: true, errorMessage: "Une erreur s'est produite!");
+      }
+    }
+    return ApiResponse<List<Transaction>>(
+        error: true, errorMessage: "Une erreur s'est produite!");
+  }).catchError((_) => ApiResponse<List<Transaction>>(
+      error: true, errorMessage: "Une erreur s'est produite!"));
+}
+
+Future<ApiResponse<List<Transaction>>> getTontineDepot() {
+  final user = json.decode(UserPreferences().client);
+  return http
+      .get(API + "client/accounts/transaction-liste/${user["id"]}", headers: headers)
+      .then((data) {
+    if (data.statusCode == 200) {
+      final jsonData = json.decode(data.body);
+      final tontineRetrait = <Transaction>[];
+      if (jsonData["transactions"]["tontine"]["deposits"].toString().isNotEmpty) {
+        for (var item in jsonData["transactions"]["tontine"]["deposits"]) {
+          tontineRetrait.add(Transaction.fromJson(item));
+        }
+        return ApiResponse<List<Transaction>>(data: tontineRetrait);
+      } else {
+        return ApiResponse<List<Transaction>>(
+            error: true, errorMessage: "Une erreur s'est produite!");
+      }
+    }
+    return ApiResponse<List<Transaction>>(
+        error: true, errorMessage: "Une erreur s'est produite!");
+  }).catchError((_) => ApiResponse<List<Transaction>>(
+      error: true, errorMessage: "Une erreur s'est produite!"));
+}
+
+Future<ApiResponse<List<Transaction>>> getEpargneRetrait() {
+  final user = json.decode(UserPreferences().client);
+  return http
+      .get(API + "client/accounts/transaction-liste/${user["id"]}", headers: headers)
+      .then((data) {
+    if (data.statusCode == 200) {
+      final jsonData = json.decode(data.body);
+      final tontineRetrait = <Transaction>[];
+      if (jsonData["transactions"]["epargne"]["withdrawals"].toString().isNotEmpty) {
+        for (var item in jsonData["transactions"]["epargne"]["withdrawals"]) {
+          tontineRetrait.add(Transaction.fromJson(item));
+        }
+        return ApiResponse<List<Transaction>>(data: tontineRetrait);
+      } else {
+        return ApiResponse<List<Transaction>>(
+            error: true, errorMessage: "Une erreur s'est produite!");
+      }
+    }
+    return ApiResponse<List<Transaction>>(
+        error: true, errorMessage: "Une erreur s'est produite!");
+  }).catchError((_) => ApiResponse<List<Transaction>>(
+      error: true, errorMessage: "Une erreur s'est produite!"));
+}
+
+Future<ApiResponse<List<Transaction>>> getEpargneDepot() {
+  final user = json.decode(UserPreferences().client);
+  return http
+      .get(API + "client/accounts/transaction-liste/${user["id"]}", headers: headers)
+      .then((data) {
+    if (data.statusCode == 200) {
+      final jsonData = json.decode(data.body);
+      final tontineRetrait = <Transaction>[];
+      if (jsonData["transactions"]["epargne"]["deposits"].toString().isNotEmpty) {
+        for (var item in jsonData["transactions"]["epargne"]["deposits"]) {
+          tontineRetrait.add(Transaction.fromJson(item));
+        }
+        return ApiResponse<List<Transaction>>(data: tontineRetrait);
+      } else {
+        return ApiResponse<List<Transaction>>(
+            error: true, errorMessage: "Une erreur s'est produite!");
+      }
+    }
+    return ApiResponse<List<Transaction>>(
+        error: true, errorMessage: "Une erreur s'est produite!");
+  }).catchError((_) => ApiResponse<List<Transaction>>(
+      error: true, errorMessage: "Une erreur s'est produite!"));
+}
+  /* ===== Tout ce qui concerne Les Transactions end ===== */
 
 }

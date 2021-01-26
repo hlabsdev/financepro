@@ -20,6 +20,7 @@ Type_acc _$Type_accFromJson(Map<String, dynamic> json) {
     ..block_period = json['block_period'] as num
     ..block_end_date = json['block_end_date'] as String
     ..mise = json['mise'] as String
+    ..soft_delete = json['soft_delete'] as String
     ..created_at = json['created_at'] as num
     ..updated_at = json['updated_at'] as num;
 }
@@ -37,6 +38,7 @@ Map<String, dynamic> _$Type_accToJson(Type_acc instance) => <String, dynamic>{
       'block_period': instance.block_period,
       'block_end_date': instance.block_end_date,
       'mise': instance.mise,
+      'soft_delete': instance.soft_delete,
       'created_at': instance.created_at,
       'updated_at': instance.updated_at
     };
