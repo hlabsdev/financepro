@@ -92,6 +92,7 @@ class _LoginState extends State<Login> {
 
   void _validateAll() {
     setState(() {
+      //print(_emailEmpty);
       if (!_emailEmpty) {
         if (!_passwordEmpty) {
           _isAllValidate = true;
@@ -106,14 +107,16 @@ class _LoginState extends State<Login> {
   void _handleLogin() {
     setState(() {
       _isLoading = true;
+
+      //print(api.status);
       if (_isAllValidate) {
         api
             .login(_mailController.text, _passwordController.text)
             .whenComplete(() {
-          if ((api.status) || (api.userData["token"].toString().isEmpty)) {
+          if ((api.userData["token"] == null) || (api.status)) {
             showDismissableFlushbar(
                 context,
-                "Une erreur s'est produite",
+                "Invalid Credentials",
                 "Données invalide, ou mauvaise connexion. Veuillez reessayer avec des données correct ou avec un meilleure connexion",
                 true);
           } else {

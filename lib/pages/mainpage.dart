@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/pages/agent/chat_home.dart';
 import 'package:finance/pages/rendez-vous/rendez_vous.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,29 +40,6 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
-/* 
-  Future<bool> _onBackPressed() {
-    return showDialog(
-          context: context,
-          builder: (context) => new AlertDialog(
-            title: new Text("Vous etes sur?"),
-            content: new Text("Voulez-vous vraiment Quitter l'application"),
-            actions: <Widget>[
-              FlatButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: Text('NON'),
-              ),
-              FlatButton(
-                onPressed: () => exit(0),
-                /*Navigator.of(context).pop(true)*/
-                child: Text('OUI'),
-              ),
-            ],
-          ),
-        ) ??
-        false;
-  }
- */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -145,7 +123,8 @@ class _MainPageState extends State<MainPage> {
               ),
               leading: const Icon(Icons.question_answer),
               onTap: () {
-                _showDialog("Bientot Diosponible", "En cours de developpement...", false);
+                _showDialog("Bientot Diosponible",
+                    "En cours de developpement...", false);
               },
             ),
             Divider(
@@ -168,7 +147,8 @@ class _MainPageState extends State<MainPage> {
               ),
               leading: const Icon(Icons.logout),
               onTap: () {
-                _showDialog("Etes-vous sur?", "Voulez-vous vraiment vous deconnecter!?", true);
+                _showDialog("Etes-vous sur?",
+                    "Voulez-vous vraiment vous deconnecter!?", true);
               },
             ),
           ],
@@ -230,7 +210,8 @@ class _MainPageState extends State<MainPage> {
                       height: 50,
                       width: 50,
                     ),
-                    routePage: MyAgent(),
+                    // routePage: MyAgent(),
+                    routePage: ChatHome(),
                   ),
                   MenuIconCard(
                     title: "Rendez-vous",
@@ -268,17 +249,19 @@ class _MainPageState extends State<MainPage> {
                 Navigator.of(context).pop();
               },
             ),
-            isDecon ? FlatButton(
-              child: Text("Valider"),
-              onPressed: () {
-                CallAPi().logout();
+            isDecon
+                ? FlatButton(
+                    child: Text("Valider"),
+                    onPressed: () {
+                      CallAPi().logout();
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Login()),
-                );
-              },
-            ): null,
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Login()),
+                      );
+                    },
+                  )
+                : null,
           ],
         );
       },

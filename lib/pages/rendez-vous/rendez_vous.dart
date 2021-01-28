@@ -4,7 +4,6 @@ import 'package:finance/api/api.dart';
 import 'package:finance/models/account.dart';
 import 'package:finance/services/app_services.dart';
 import 'package:finance/services/user_preferences.dart';
-import 'package:finance/utils/refreshable_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,6 +15,8 @@ class RendezVous extends StatefulWidget {
 
 class _RendezVousState extends State<RendezVous> {
   MyAppServices get service => GetIt.I<MyAppServices>();
+
+  var userData;
   ApiResponse<Account> _apiResponse;
   bool _isLoading;
   // Account compte;
@@ -35,22 +36,15 @@ class _RendezVousState extends State<RendezVous> {
       setState(() {
         _apiResponse = newApiResp;
       });
-      UserPreferences().carnet = json.encode(newApiResp.data);
+      UserPreferences().comptes = json.encode(newApiResp.data);
     } else {
-      if (UserPreferences().carnet.toString().isEmpty) {
+      if (UserPreferences().comptes.toString().isEmpty) {
         _apiResponse = await service.getAccount();
-        UserPreferences().carnet = json.encode(_apiResponse.data);
+        UserPreferences().comptes = json.encode(_apiResponse.data);
       } else {
-        var listMois = <Account>[];
-        print(json.decode(UserPreferences().carnet));
-        for (var index in json.decode(UserPreferences().carnet)) {
-          // listAccount.add(Account.fromJson(json.decode(index)));
-          listMois.add(Account.fromJson(index));
-        }
         _apiResponse = ApiResponse<Account>(
-            // _apiResponse = ApiResponse<List<Account>>(
-            // data: listMois,
-            );
+          data: Account.fromJson(json.decode(UserPreferences().comptes)),
+        );
       }
     }
 

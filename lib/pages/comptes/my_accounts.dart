@@ -4,8 +4,6 @@ import 'package:finance/services/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:finance/api/api.dart';
 import 'package:finance/models/account.dart';
 import 'package:finance/pages/comptes/epargne.dart';
@@ -86,12 +84,21 @@ class _MyAccountsState extends State<MyAccounts> {
               labelColor: Colors.black54,
               tabs: [
                 Tab(
-                  icon: Icon(Icons.account_balance),
-                  text: 'Compte Tontine',
+                  child: Text(
+                    'COMPTE TONTINE',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: Icon(
+                    Icons.account_balance,
+                    color: Colors.white,
+                  ),
                 ),
                 Tab(
-                  icon: Icon(Icons.account_box),
-                  text: 'Compte Epargne',
+                  child: Text(
+                    'COMPTE EPARGNE',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  icon: Icon(Icons.account_box, color: Colors.white),
                 ),
               ],
             ),
