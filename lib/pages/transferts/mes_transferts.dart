@@ -19,12 +19,45 @@ class _MesTansfertState extends State<MesTansfert> {
   var userData;
   ApiResponse<Account> _apiResponse;
   bool _isLoading;
-  // Account compte;
+  List _compte = ["Tontine", "Epargne"];
+
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  String _currentSender;
+  String _currentReceiver;
 
   @override
   void initState() {
     _fetchData(false);
+    _dropDownMenuItems = getDropDownMenuItems();
+    _currentSender = _dropDownMenuItems[0].value;
+    _currentReceiver = _dropDownMenuItems[1].value;
     super.initState();
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String city in _compte) {
+      items.add(new DropdownMenuItem(value: city, child: new Text(city)));
+    }
+    return items;
+  }
+
+  void changedDropDownItemSender(String selectedCity) {
+    setState(() {
+      _currentSender = selectedCity;
+      _currentReceiver = selectedCity == _dropDownMenuItems[0].value
+          ? _dropDownMenuItems[1].value
+          : _dropDownMenuItems[0].value;
+    });
+  }
+
+  void changedDropDownItemReceiver(String selectedCity) {
+    setState(() {
+      _currentReceiver = selectedCity;
+      _currentSender = selectedCity == _dropDownMenuItems[0].value
+          ? _dropDownMenuItems[1].value
+          : _dropDownMenuItems[0].value;
+    });
   }
 
   _fetchData(bool getNew) async {
@@ -104,15 +137,62 @@ class _MesTansfertState extends State<MesTansfert> {
             ),
           );
         }
-        return Center(
-            child: Text(
-          "Bientot Disponible (-_-)",
-          style: GoogleFonts.arya(
-            fontSize: 25,
-            fontWeight: FontWeight.bold,
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Card(
+                      color: Colors.white,
+                      elevation: 8,
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Text("Compte Source"),
+                          new Container(
+                            padding: new EdgeInsets.all(16.0),
+                          ),
+                          new DropdownButton(
+                            value: _currentSender,
+                            items: _dropDownMenuItems,
+                            onChanged: changedDropDownItemSender,
+                          )
+                        ],
+                      ),
+                    ),
+                    Card(
+                      color: Colors.white,
+                      elevation: 8,
+                      child: new Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          new Text("Compte Cible"),
+                          new Container(
+                            padding: new EdgeInsets.all(16.0),
+                          ),
+                          new DropdownButton(
+                            value: _currentReceiver,
+                            items: _dropDownMenuItems,
+                            onChanged: changedDropDownItemReceiver,
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
-          textAlign: TextAlign.center,
-        ));
+        );
       }),
     );
   }

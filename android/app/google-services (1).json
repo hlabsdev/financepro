@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "886529708473",
+    "project_id": "mfpmobile-1241c",
+    "storage_bucket": "mfpmobile-1241c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886529708473:android:77eafd9a36291105b82668",
+        "android_client_info": {
+          "package_name": "com.example.finance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "886529708473-3rt0mb56n8rom8r2kdroo8u5vn5muc14.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKMA-J-QlBxoVaD6iA1LBZmS0hrQBDFRE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "886529708473-3rt0mb56n8rom8r2kdroo8u5vn5muc14.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
