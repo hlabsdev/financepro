@@ -105,9 +105,7 @@ class _TontineState extends State<Tontine> {
                       }, */
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => CotisationPage(
-                                    mise: widget.tontine.mise,
-                                  )));
+                              builder: (_) => CotisationPage()));
                         },
                         child: Container(
                             decoration: BoxDecoration(

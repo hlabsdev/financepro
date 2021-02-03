@@ -1,22 +1,19 @@
 import 'dart:convert';
 
 import 'package:finance/api/api.dart';
+import 'package:finance/models/agent_client.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../models/microfinance.dart';
 import '../../services/app_services.dart';
 import '../../services/user_preferences.dart';
 
 class CotisationPage extends StatefulWidget {
-  final String mise;
-
   const CotisationPage({
     Key key,
-    this.mise,
   }) : super(key: key);
 
   @override
@@ -24,11 +21,11 @@ class CotisationPage extends StatefulWidget {
 }
 
 class _CotisationPageState extends State<CotisationPage> {
-  /* 
+  TextEditingController sommeController = TextEditingController();
+
   MyAppServices get service => GetIt.I<MyAppServices>();
-  ApiResponse<Account> _apiResponse;
+  ApiResponse<AgentClient> _apiResponse;
   bool _isLoading;
-  // Account compte;
 
   @override
   void initState() {
@@ -40,19 +37,21 @@ class _CotisationPageState extends State<CotisationPage> {
     setState(() {
       _isLoading = true;
     });
+
     if (getNew) {
-      var newApiResp = await service.getAccount();
+      var newApiResp = await service.getAgentClient();
       setState(() {
         _apiResponse = newApiResp;
       });
-      UserPreferences().comptes = json.encode(newApiResp.data);
+      UserPreferences().agentClient = json.encode(newApiResp.data);
     } else {
-      if (UserPreferences().comptes.toString().isEmpty) {
-        _apiResponse = await service.getAccount();
-        UserPreferences().comptes = json.encode(_apiResponse.data);
+      if (UserPreferences().agentClient.toString().isEmpty) {
+        _apiResponse = await service.getAgentClient();
+        UserPreferences().agentClient = json.encode(_apiResponse.data);
       } else {
-        _apiResponse = ApiResponse<Account>(
-          data: Account.fromJson(json.decode(UserPreferences().comptes)),
+        _apiResponse = ApiResponse<AgentClient>(
+          data:
+              AgentClient.fromJson(json.decode(UserPreferences().agentClient)),
         );
       }
     }
@@ -61,13 +60,13 @@ class _CotisationPageState extends State<CotisationPage> {
       _isLoading = false;
     });
   }
- */
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: false,
-          /* actions: [
+      appBar: AppBar(
+        centerTitle: false,
+        actions: [
           IconButton(
             tooltip: "Rafraichir la page",
             icon: Icon(Icons.refresh_rounded),
@@ -75,16 +74,45 @@ class _CotisationPageState extends State<CotisationPage> {
               _fetchData(true);
             },
           ),
-        ], */
-          title: Text(
-            "Cotiser",
-            style: GoogleFonts.arya(
-                fontSize: 25,
-                fontWeight: FontWeight.bold,
-                fontStyle: FontStyle.normal),
-          ),
+        ],
+        title: Text(
+          "Cotiser",
+          style: GoogleFonts.arya(
+              fontSize: 25,
+              fontWeight: FontWeight.bold,
+              fontStyle: FontStyle.normal),
         ),
-        body: Container(
+      ),
+      body: Builder(builder: (_) {
+        if (_isLoading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        if (_apiResponse.error) {
+          return Center(
+            child: Text(
+              _apiResponse.errorMessage,
+              style: GoogleFonts.lato(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.normal),
+            ),
+          );
+        }
+        // ignore: unrelated_type_equality_checks
+        if (_apiResponse.data == null) {
+          return Center(
+            child: Text(
+              "Aucune donnée pour le moment",
+              style: GoogleFonts.lato(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  fontStyle: FontStyle.normal),
+            ),
+          );
+        }
+        return Container(
           padding: EdgeInsets.all(5),
           child: ListView(
             shrinkWrap: true,
@@ -92,7 +120,37 @@ class _CotisationPageState extends State<CotisationPage> {
             children: [
               InkWell(
                 onTap: () {
-                  _showDialog("Flooz", widget.mise);
+                  _showDialog(
+                      "Chez l'agent", _apiResponse.data.account.mise, true);
+                },
+                child: Card(
+                  elevation: 8,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        child: Image(
+                            image: AssetImage("images/agent_moto.png"),
+                            height: 100,
+                            width: 100),
+                      ),
+                      Text(
+                        "Cotiser chez l'agent",
+                        style: GoogleFonts.cairo(
+                            color: Colors.blue[800],
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  _showDialog(
+                      "par Flooz", _apiResponse.data.account.mise, false);
                 },
                 child: Card(
                   elevation: 8,
@@ -120,7 +178,8 @@ class _CotisationPageState extends State<CotisationPage> {
               ),
               InkWell(
                 onTap: () {
-                  _showDialog("TMoney", widget.mise);
+                  _showDialog(
+                      "par TMoney", _apiResponse.data.account.mise, false);
                 },
                 child: Card(
                   elevation: 8,
@@ -146,45 +205,14 @@ class _CotisationPageState extends State<CotisationPage> {
                   ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  Navigator.of(context)
-                      .push(PageRouteBuilder(pageBuilder: (_, __, ___) {
-                    return CotiserAgent(
-                      mise: widget.mise,
-                    );
-                  }));
-                },
-                child: Card(
-                  elevation: 8,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: Image(
-                            image: AssetImage("images/agent_moto.png"),
-                            height: 100,
-                            width: 100),
-                      ),
-                      Text(
-                        "Cotiser chez l'agent",
-                        style: GoogleFonts.cairo(
-                            color: Colors.blue[800],
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
             ],
           ),
-        ));
+        );
+      }),
+    );
   }
 
-  void _showDialog(String titre, String mise) {
+  void _showDialog(String titre, String mise, bool dispo) {
     TextEditingController sommeController = TextEditingController();
     setState(() {
       sommeController.text = mise;
@@ -194,43 +222,58 @@ class _CotisationPageState extends State<CotisationPage> {
       context: context,
       builder: (BuildContext context) {
         return CupertinoAlertDialog(
-          title: Text("Cotiser par " + titre),
-          content: Column(
-            children: [
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                child: CupertinoTextField(
-                  controller: sommeController,
-                  keyboardType: TextInputType.number,
-                  enabled: false,
-                  inputFormatters: <TextInputFormatter>[
-                    FilteringTextInputFormatter.digitsOnly
-                  ],
-                  placeholder: mise,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Container(
-                  child: RaisedButton(
-                textColor: Colors.white,
-                color: Theme.of(context).primaryColor,
-                elevation: 0,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                child: Text('Valider'),
-                onPressed: () {
-                  titre == "Flooz"
+          title: Text("Cotiser " + titre),
+          content: dispo
+              ? Column(
+                  children: [
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                      child: CupertinoTextField(
+                        controller: sommeController,
+                        keyboardType: TextInputType.number,
+                        // enabled: false,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        placeholder: "Le montant ici..",
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 8,
+                    ),
+                    Container(
+                        child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Theme.of(context).primaryColor,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Text('Valider'),
+                      onPressed: () {
+                        /*  titre == "Flooz"
                       ? CallAPi().launchUssd("*101#")
-                      : CallAPi().launchUssd("*444#");
-                },
-              )),
-            ],
-          ),
+                      : Call APi().launchUssd("*444#");*/
+
+                        var resp = CallAPi().postData({
+                          "account": _apiResponse.data.account.id,
+                          "amount": sommeController.text,
+                          "agent": _apiResponse.data.agent,
+                        }, "client/cotisation/journaliere/${_apiResponse.data.account.client_id}").whenComplete(
+                            () {
+                          Navigator.of(context).pop();
+                        });
+                        if (resp != null) {
+                          print("resp = " + resp.toString());
+                        } else
+                          print("resp = Echec");
+                      },
+                    )),
+                  ],
+                )
+              : Text("Bientot Dipo"),
           actions: <Widget>[
             // usually buttons at the bottom of the dialog
             FlatButton(
@@ -246,129 +289,5 @@ class _CotisationPageState extends State<CotisationPage> {
     setState(() {
       sommeController.text = "";
     });
-  }
-}
-
-/* ========================================================================== */
-class CotiserAgent extends StatefulWidget {
-  final String mise;
-
-  const CotiserAgent({Key key, this.mise}) : super(key: key);
-
-  @override
-  _CotiserAgentState createState() => _CotiserAgentState();
-}
-
-class _CotiserAgentState extends State<CotiserAgent> {
-  TextEditingController sommeController = TextEditingController();
-
-  MyAppServices get service => GetIt.I<MyAppServices>();
-  ApiResponse<Microfinance> _apiResponse;
-  bool _isLoading;
-  // Account compte;
-
-  @override
-  void initState() {
-    _fetchData(false);
-    sommeController.text = widget.mise;
-    super.initState();
-  }
-
-  _fetchData(bool getNew) async {
-    setState(() {
-      _isLoading = true;
-    });
-    if (getNew) {
-      var newApiResp = await service.getMyMicrofinance();
-      setState(() {
-        _apiResponse = newApiResp;
-      });
-      UserPreferences().maMicrofinance = json.encode(newApiResp.data);
-    } else {
-      if (UserPreferences().maMicrofinance.toString().isEmpty) {
-        _apiResponse = await service.getMyMicrofinance();
-        UserPreferences().maMicrofinance = json.encode(_apiResponse.data);
-      } else {
-        _apiResponse = ApiResponse<Microfinance>(
-          data: Microfinance.fromJson(
-              json.decode(UserPreferences().maMicrofinance)),
-        );
-      }
-    }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: Text(
-          "Cotiser",
-          style: GoogleFonts.arya(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              fontStyle: FontStyle.normal),
-        ),
-      ),
-      body: Builder(builder: (_) {
-        if (_isLoading) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
-        if (_apiResponse.error) {
-          return Center(
-            child: Text(_apiResponse.errorMessage),
-          );
-        }
-        return Container(
-          // padding: EdgeInsets.all(20),
-          child: Center(
-            child: SizedBox(
-              height: 200,
-              width: 300,
-              child: Card(
-                elevation: 8,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      child: CupertinoTextField(
-                        controller: sommeController,
-                        keyboardType: TextInputType.number,
-                        enabled: false,
-                        inputFormatters: <TextInputFormatter>[
-                          FilteringTextInputFormatter.digitsOnly
-                        ],
-                        placeholder: widget.mise,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Container(
-                        child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Text('Cotiser'),
-                      onPressed: () {},
-                    )),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      }),
-    );
   }
 }

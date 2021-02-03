@@ -79,6 +79,14 @@ class UserPreferences {
   set carnet(String value) {
     _prefs.setString("moisList", value);
   }
+
+  get agentClient {
+    return _prefs.getString("agentClient") ?? "";
+  }
+
+  set agentClient(String value) {
+    _prefs.setString("agentClient", value);
+  }
   /* Compte Client end */
 
   /* Credit deb */

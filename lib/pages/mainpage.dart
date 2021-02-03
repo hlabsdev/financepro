@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:finance/pages/agent/chat_home.dart';
+import 'package:finance/pages/comptes/cotisation_page.dart';
 import 'package:finance/pages/rendez-vous/rendez_vous.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -114,7 +115,11 @@ class _MainPageState extends State<MainPage> {
               ),
               leading: const Icon(Icons.money_rounded),
               onTap: () {
-                CallAPi().launchUssd("*155*6*1#");
+                // CallAPi().launchUssd("*155*6*1#");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CotisationPage()),
+                );
               },
             ),
             ListTile(
