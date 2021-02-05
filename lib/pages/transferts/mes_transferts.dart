@@ -5,6 +5,7 @@ import 'package:finance/models/account.dart';
 import 'package:finance/services/app_services.dart';
 import 'package:finance/services/user_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,6 +15,10 @@ class MesTansfert extends StatefulWidget {
 }
 
 class _MesTansfertState extends State<MesTansfert> {
+  final TextEditingController _montantController = TextEditingController();
+
+  var _isAllValidate;
+
   MyAppServices get service => GetIt.I<MyAppServices>();
 
   var userData;
@@ -35,9 +40,9 @@ class _MesTansfertState extends State<MesTansfert> {
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
-    List<DropdownMenuItem<String>> items = new List();
+    List<DropdownMenuItem<String>> items = List();
     for (String city in _compte) {
-      items.add(new DropdownMenuItem(value: city, child: new Text(city)));
+      items.add(DropdownMenuItem(value: city, child: Text(city)));
     }
     return items;
   }
@@ -139,8 +144,6 @@ class _MesTansfertState extends State<MesTansfert> {
         }
         return SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Padding(
                 padding:
@@ -149,51 +152,116 @@ class _MesTansfertState extends State<MesTansfert> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Card(
-                      color: Colors.white,
-                      elevation: 8,
-                      child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Text("Compte Source"),
-                          new Container(
-                            padding: new EdgeInsets.all(16.0),
-                          ),
-                          new DropdownButton(
-                            value: _currentSender,
-                            items: _dropDownMenuItems,
-                            onChanged: changedDropDownItemSender,
-                          )
-                        ],
+                    Container(
+                      height: 100,
+                      width: 150,
+                      child: Card(
+                        color: Colors.white,
+                        elevation: 8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text(
+                              "Compte Source",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Container(
+                                // padding:  EdgeInsets.all(8.0),
+                                ),
+                            DropdownButton(
+                              value: _currentSender,
+                              items: _dropDownMenuItems,
+                              onChanged: changedDropDownItemSender,
+                            )
+                          ],
+                        ),
                       ),
                     ),
-                    Card(
-                      color: Colors.white,
-                      elevation: 8,
-                      child: new Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          new Text("Compte Cible"),
-                          new Container(
-                            padding: new EdgeInsets.all(16.0),
-                          ),
-                          new DropdownButton(
-                            value: _currentReceiver,
-                            items: _dropDownMenuItems,
-                            onChanged: changedDropDownItemReceiver,
-                          )
-                        ],
+                    Container(
+                      height: 100,
+                      width: 150,
+                      child: Card(
+                        color: Colors.white,
+                        elevation: 8,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: <Widget>[
+                            Text(
+                              "Compte Cible",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Container(
+                                // padding:  EdgeInsets.all(16.0),
+                                ),
+                            DropdownButton(
+                              value: _currentReceiver,
+                              items: _dropDownMenuItems,
+                              onChanged: changedDropDownItemReceiver,
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              )
+              ),
+              //
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8, horizontal: 20),
+                child: Container(
+                  child: TextField(
+                      controller: _montantController,
+                      onChanged: (value) {
+                        _validateAll();
+                      },
+                      textAlign: TextAlign.center,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly
+                      ],
+                      keyboardType: TextInputType.number,
+                      decoration: InputDecoration(
+                          errorText: _validateAmmount(),
+                          hintText: "Entrez le montant ici...",
+                          fillColor: Color(0xfff3f3f4),
+                          filled: true)),
+                ),
+              ),
+              //
+              Container(
+                alignment: Alignment.center,
+                child: RaisedButton(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    'Transferer',
+                    style: TextStyle(fontSize: 25, fontFamily: "arial"),
+                  ),
+                  textColor: Colors.white,
+                  color: Theme.of(context).primaryColor,
+                  elevation: 5,
+                  onPressed: () {
+                    _isAllValidate
+                        ? _transfer()
+                        : showDismissableFlushbar(context, "Pas de saisie",
+                            "Saisissez quelque chose avant de valider", false);
+                  },
+                ),
+              ),
             ],
           ),
         );
       }),
     );
   }
+
+  _validateAmmount() {}
+
+  void _validateAll() {}
+
+  _transfer() {}
+
+  showDismissableFlushbar(
+      BuildContext context, String s, String t, bool bool) {}
 }

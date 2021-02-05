@@ -15,6 +15,8 @@ class ChatHome extends StatefulWidget {
 }
 
 class _ChatHomeState extends State<ChatHome> {
+  TextEditingController _messageController = new TextEditingController();
+
   MyAppServices get service => GetIt.I<MyAppServices>();
 
   var userData;
@@ -54,20 +56,25 @@ class _ChatHomeState extends State<ChatHome> {
     });
   }
 
-  List<ChatMessage> messages = [
-    ChatMessage(messageContent: "Bonjour", messageType: "sender"),
-    ChatMessage(
-        messageContent: "Quand passerez-vous prochainement?",
-        messageType: "sender"),
-    ChatMessage(
-        messageContent: "Salut, Je pense passer à 14h30. Serez-vous là?",
-        messageType: "receiver"),
-    ChatMessage(
-        messageContent: "Abn!? Je m'arragerai ppour etre là alors.",
-        messageType: "sender"),
-    ChatMessage(
-        messageContent: "Super alors. On se dit a cet apres-midi.",
-        messageType: "receiver"),
+  List<Message> messages = [
+    Message(content: "Bonjour", type: "sender"),
+    Message(content: "Quand passerez-vous prochainement?", type: "sender"),
+    Message(
+        content: "Salut, Je pense passer à 14h30. Serez-vous là?",
+        type: "receiver"),
+    Message(
+        content: "Ah bon!? Je m'arrangerai pour etre là alors.",
+        type: "sender"),
+    Message(
+        content: "Super alors. On se dit a cet apres-midi.", type: "receiver"),
+    Message(content: "D'accord. Je vous attend donc", type: "sender"),
+    Message(
+        content:
+            "Ah j'oubliais, il faut aussi preparer la cotisation du 28 que vous avez rater.",
+        type: "receiver"),
+    Message(
+        content: "Ah oui merci beaucoup. J'avais completement oublié!!",
+        type: "sender"),
   ];
 
   @override
@@ -123,42 +130,62 @@ class _ChatHomeState extends State<ChatHome> {
         }
         return Stack(
           children: <Widget>[
-            ListView.builder(
-              itemCount: messages.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.only(top: 10, bottom: 10),
-              physics: NeverScrollableScrollPhysics(),
-              itemBuilder: (context, index) {
-                return Container(
-                  padding:
-                      EdgeInsets.only(left: 14, right: 14, top: 10, bottom: 10),
-                  child: Align(
-                    alignment: (messages[index].messageType == "receiver"
-                        ? Alignment.topLeft
-                        : Alignment.topRight),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: (messages[index].messageType == "receiver"
-                            ? Colors.grey.shade200
-                            : Colors.blue[200]),
-                      ),
-                      padding: EdgeInsets.all(16),
-                      child: Text(
-                        messages[index].messageContent,
-                        style: TextStyle(fontSize: 15),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                child: Text(
+                  "Attention ceci ne se passe pas en temp réel!!!",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.deepOrange,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              height: 460,
+              child: ListView.builder(
+                itemCount: messages.length,
+                // shrinkWrap: true,
+                // primary: true,
+                padding: EdgeInsets.only(top: 10, bottom: 10),
+                // physics: NeverScrollableScrollPhysics(),
+                physics: BouncingScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: EdgeInsets.only(
+                        left: 14, right: 14, top: 10, bottom: 10),
+                    child: Align(
+                      alignment: (messages[index].type == "receiver"
+                          ? Alignment.topLeft
+                          : Alignment.topRight),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: (messages[index].type == "receiver"
+                              ? Colors.grey.shade200
+                              : Colors.blue[200]),
+                        ),
+                        padding: EdgeInsets.all(16),
+                        child: Text(
+                          messages[index].content,
+                          style: TextStyle(fontSize: 15),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
             Align(
-              alignment: Alignment.bottomLeft,
+              alignment: Alignment.bottomCenter,
               child: Container(
-                padding: EdgeInsets.only(left: 10, bottom: 10, top: 10),
-                height: 60,
-                width: double.infinity,
+                // padding: EdgeInsets.only(left: 10, bottom: 10),
+                // height: 60,
+                // width: double.infinity,
                 color: Colors.white,
                 child: Row(
                   children: <Widget>[
@@ -183,6 +210,7 @@ class _ChatHomeState extends State<ChatHome> {
                     ),
                     Expanded(
                       child: TextField(
+                        controller: _messageController,
                         decoration: InputDecoration(
                             hintText: "Ecrivez votre message...",
                             hintStyle: TextStyle(color: Colors.black54),
@@ -193,11 +221,30 @@ class _ChatHomeState extends State<ChatHome> {
                       width: 15,
                     ),
                     FloatingActionButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        messages.add(
+                          Message(
+                              content: _messageController.text,
+                              type: this.messages.last.type == "sender"
+                                  ? "receiver"
+                                  : "sender"),
+                        );
+
+                        setState(() {
+                          this.messages;
+                        });
+                        _messageController.text = "";
+
+                        // setState(() {
+                        //   messages.add(Message(
+                        //       content: _messageController.text,
+                        //       type: "sender"));
+                        // });
+                      },
                       child: Icon(
                         Icons.send,
                         color: Colors.white,
-                        size: 18,
+                        size: 20,
                       ),
                       backgroundColor: Theme.of(context).primaryColor,
                       elevation: 5,

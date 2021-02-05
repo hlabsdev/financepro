@@ -21,12 +21,12 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   void initState() {
     super.initState();
+    loadData();
     _incrementStartup();
     /*
     if (_getStartupNumber() > 1){
       onDonePress();
     }*/
-    loadData();
 
     slides.add(
       new Slide(
@@ -97,14 +97,16 @@ class _IntroScreenState extends State<IntroScreen> {
 
   Future<void> _incrementStartup() async {
     final pref = await SharedPreferences.getInstance();
-    int lastStartupNumber = await _getStartupNumber();
+    int lastStartupNumber = _getStartupNumber();
     int currentStartupNumber = ++lastStartupNumber;
-
-    await pref.setInt("startupNumber", currentStartupNumber);
+    UserPreferences().startupNumber = currentStartupNumber.toString();
+    if (lastStartupNumber > 1) {
+      this.onDonePress();
+    }
   }
 
   int _getStartupNumber() {
-    final int startupNumber = UserPreferences().startupNumber;
+    int startupNumber = UserPreferences().startupNumber.hashCode;
     if (startupNumber == null) {
       return 0;
     }
@@ -132,7 +134,6 @@ class _IntroScreenState extends State<IntroScreen> {
     return new IntroSlider(
       slides: this.slides,
       onDonePress: this.onDonePress,
-
     );
   }
 }
