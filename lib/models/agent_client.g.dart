@@ -11,8 +11,10 @@ AgentClient _$AgentClientFromJson(Map<String, dynamic> json) {
     ..account = json['account'] == null
         ? null
         : Type_acc.fromJson(json['account'] as Map<String, dynamic>)
-    ..agent = json['agent'] as String;
+    ..agent = json['agent'] == null
+        ? null
+        : Client.fromJson(json['agent'] as Map<String, dynamic>);
 }
 
 Map<String, dynamic> _$AgentClientToJson(AgentClient instance) =>
-    <String, dynamic>{'account': instance.account, 'tontine': instance.agent};
+    <String, dynamic>{'account': instance.account, 'agent': instance.agent};

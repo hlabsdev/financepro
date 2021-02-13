@@ -37,7 +37,6 @@ class _CotisationPageState extends State<CotisationPage> {
     setState(() {
       _isLoading = true;
     });
-
     if (getNew) {
       var newApiResp = await service.getAgentClient();
       setState(() {
@@ -100,8 +99,7 @@ class _CotisationPageState extends State<CotisationPage> {
             ),
           );
         }
-        // ignore: unrelated_type_equality_checks
-        if (_apiResponse.data == null) {
+        if (_apiResponse.data.agent.toString().isEmpty) {
           return Center(
             child: Text(
               "Aucune donnée pour le moment",
@@ -260,7 +258,7 @@ class _CotisationPageState extends State<CotisationPage> {
                         var resp = CallAPi().postData({
                           "account": _apiResponse.data.account.id,
                           "amount": sommeController.text,
-                          "agent": _apiResponse.data.agent,
+                          "agent": _apiResponse.data.agent.id,
                         }, "client/cotisation/journaliere/${_apiResponse.data.account.client_id}").whenComplete(
                             () {
                           Navigator.of(context).pop();

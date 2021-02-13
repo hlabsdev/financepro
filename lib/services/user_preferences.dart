@@ -87,6 +87,14 @@ class UserPreferences {
   set agentClient(String value) {
     _prefs.setString("agentClient", value);
   }
+
+  get agent {
+    return _prefs.getString("agent") ?? "";
+  }
+
+  set agent(String value) {
+    _prefs.setString("agent", value);
+  }
   /* Compte Client end */
 
   /* Credit deb */

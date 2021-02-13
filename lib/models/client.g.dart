@@ -12,6 +12,10 @@ Client _$ClientFromJson(Map<String, dynamic> json) {
     ..fname = json['fname'] as String
     ..lname = json['lname'] as String
     ..email = json['email'] as String
+    ..active_status = json['active_status'] as String
+    ..dark_mode = json['dark_mode'] as String
+    ..messenger_color = json['messenger_color'] as String
+    ..avatar = json['avatar'] as String
     ..phone = json['phone'] as String
     ..world_countries_id = json['world_countries_id'] as String
     ..card_number = json['card_number'] as String
@@ -45,6 +49,10 @@ Map<String, dynamic> _$ClientToJson(Client instance) => <String, dynamic>{
       'fname': instance.fname,
       'lname': instance.lname,
       'email': instance.email,
+      'active_status': instance.active_status,
+      'dark_mode': instance.dark_mode,
+      'messenger_color': instance.messenger_color,
+      'avatar': instance.avatar,
       'phone': instance.phone,
       'world_countries_id': instance.world_countries_id,
       'card_number': instance.card_number,

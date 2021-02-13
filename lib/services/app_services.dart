@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:finance/models/agent_client.dart';
 import 'package:finance/services/user_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:finance/api/api.dart';
 import 'package:finance/models/account.dart';
@@ -53,10 +53,11 @@ class MyAppServices {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
 
-        final account = AgentClient.fromJson(jsonData);
-
+        final agentClient = AgentClient(
+            account: Type_acc.fromJson(jsonData["account"]),
+            agent: Client.fromJson(jsonData["agent"]));
         return ApiResponse<AgentClient>(
-          data: account,
+          data: agentClient,
         );
       }
       return ApiResponse<AgentClient>(

@@ -10,6 +10,10 @@ class Client {
   String fname;
   String lname;
   String email;
+  String active_status;
+  String dark_mode;
+  String messenger_color;
+  String avatar;
   String phone;
   String world_countries_id;
   String card_number;
@@ -42,6 +46,10 @@ class Client {
     this.fname,
     this.lname,
     this.email,
+    this.active_status,
+    this.dark_mode,
+    this.messenger_color,
+    this.avatar,
     this.phone,
     this.world_countries_id,
     this.card_number,
