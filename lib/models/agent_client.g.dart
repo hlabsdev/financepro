@@ -6,8 +6,8 @@ part of 'agent_client.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AgentClient _$AgentClientFromJson(Map<String, dynamic> json) {
-  return AgentClient()
+Agent_client _$Agent_clientFromJson(Map<String, dynamic> json) {
+  return Agent_client()
     ..account = json['account'] == null
         ? null
         : Type_acc.fromJson(json['account'] as Map<String, dynamic>)
@@ -16,5 +16,5 @@ AgentClient _$AgentClientFromJson(Map<String, dynamic> json) {
         : Client.fromJson(json['agent'] as Map<String, dynamic>);
 }
 
-Map<String, dynamic> _$AgentClientToJson(AgentClient instance) =>
+Map<String, dynamic> _$Agent_clientToJson(Agent_client instance) =>
     <String, dynamic>{'account': instance.account, 'agent': instance.agent};

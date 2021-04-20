@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:finance/api/api.dart';
 import 'package:finance/models/agent_client.dart';
+import 'package:finance/models/client.dart';
+import 'package:finance/models/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,10 +14,6 @@ import '../../services/app_services.dart';
 import '../../services/user_preferences.dart';
 
 class CotisationPage extends StatefulWidget {
-  const CotisationPage({
-    Key key,
-  }) : super(key: key);
-
   @override
   _CotisationPageState createState() => _CotisationPageState();
 }
@@ -24,35 +22,71 @@ class _CotisationPageState extends State<CotisationPage> {
   TextEditingController sommeController = TextEditingController();
 
   MyAppServices get service => GetIt.I<MyAppServices>();
-  ApiResponse<AgentClient> _apiResponse;
+  // ApiResponse<Agent_client> _apiResponse;
+  ApiResponse<Client> _apiResponse;
   bool _isLoading;
+  // var userData;
+  ApiResponse<Account> userData;
 
   @override
   void initState() {
     _fetchData(false);
+    // userData = json.decode(UserPreferences().client);
+    userData = ApiResponse<Account>(
+      data: Account.fromJson(json.decode(UserPreferences().comptes)),
+    );
     super.initState();
   }
+
+  /*_fetchData(bool getNew) async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (getNew) {
+      var newApiResp = await service.getAgent();
+      setState(() {
+        _apiResponse = newApiResp;
+      });
+      UserPreferences().agentClient = json.encode(newApiResp.data);
+      // print(_apiResponse.data);
+    } else {
+      if (UserPreferences().agentClient.toString().isEmpty) {
+        _apiResponse = await service.getAgent();
+        UserPreferences().agentClient = json.encode(_apiResponse.data);
+      } else {
+        _apiResponse = ApiResponse<Agent_client>(
+          data: Agent_client.fromJson(json.decode(UserPreferences().agentClient)),
+        );
+      }
+      print(_apiResponse.data);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }*/
 
   _fetchData(bool getNew) async {
     setState(() {
       _isLoading = true;
     });
     if (getNew) {
-      var newApiResp = await service.getAgentClient();
+      var newApiResp = await service.getAgent();
       setState(() {
         _apiResponse = newApiResp;
       });
-      UserPreferences().agentClient = json.encode(newApiResp.data);
+      UserPreferences().agent = json.encode(newApiResp.data);
+      // print(_apiResponse.data);
     } else {
-      if (UserPreferences().agentClient.toString().isEmpty) {
-        _apiResponse = await service.getAgentClient();
-        UserPreferences().agentClient = json.encode(_apiResponse.data);
+      if (UserPreferences().agent.toString().isEmpty) {
+        _apiResponse = await service.getAgent();
+        UserPreferences().agent = json.encode(_apiResponse.data);
       } else {
-        _apiResponse = ApiResponse<AgentClient>(
-          data:
-              AgentClient.fromJson(json.decode(UserPreferences().agentClient)),
+        _apiResponse = ApiResponse<Client>(
+          data: Client.fromJson(json.decode(UserPreferences().agent)),
         );
       }
+      print(_apiResponse.data);
     }
 
     setState(() {
@@ -99,7 +133,7 @@ class _CotisationPageState extends State<CotisationPage> {
             ),
           );
         }
-        if (_apiResponse.data.agent.toString().isEmpty) {
+        if (_apiResponse.data.toString().isEmpty) {
           return Center(
             child: Text(
               "Aucune donnée pour le moment",
@@ -119,7 +153,8 @@ class _CotisationPageState extends State<CotisationPage> {
               InkWell(
                 onTap: () {
                   _showDialog(
-                      "Chez l'agent", _apiResponse.data.account.mise, true);
+                      "Chez l'agent", userData.data.tontine.mise, true);
+                      // "Chez l'agent", userData['mise'], true);
                 },
                 child: Card(
                   elevation: 8,
@@ -148,7 +183,8 @@ class _CotisationPageState extends State<CotisationPage> {
               InkWell(
                 onTap: () {
                   _showDialog(
-                      "par Flooz", _apiResponse.data.account.mise, false);
+                      "par Flooz", userData.data.tontine.mise, false);
+                      // "par Flooz", userData['mise'], false);
                 },
                 child: Card(
                   elevation: 8,
@@ -177,7 +213,8 @@ class _CotisationPageState extends State<CotisationPage> {
               InkWell(
                 onTap: () {
                   _showDialog(
-                      "par TMoney", _apiResponse.data.account.mise, false);
+                      "par TMoney", userData.data.tontine.mise, false);
+                      // "par TMoney", userData['mise'], false);
                 },
                 child: Card(
                   elevation: 8,
@@ -256,10 +293,12 @@ class _CotisationPageState extends State<CotisationPage> {
                       : Call APi().launchUssd("*444#");*/
 
                         var resp = CallAPi().postData({
-                          "account": _apiResponse.data.account.id,
+                          // "account": userData['id'],
+                          "account": userData.data.tontine.id,
                           "amount": sommeController.text,
-                          "agent": _apiResponse.data.agent.id,
-                        }, "client/cotisation/journaliere/${_apiResponse.data.account.client_id}").whenComplete(
+                          "agent": _apiResponse.data.id,
+                        }, "client/cotisation/journaliere/${userData.data.tontine.client_id}").whenComplete(
+                        // }, "client/cotisation/journaliere/${userData['client_id']}").whenComplete(
                             () {
                           Navigator.of(context).pop();
                         });

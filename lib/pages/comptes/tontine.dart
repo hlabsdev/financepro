@@ -1,5 +1,6 @@
 import 'package:finance/pages/comptes/carnet.dart';
 import 'package:finance/pages/comptes/cotisation_page.dart';
+import 'package:finance/pages/transactions/mes_transactions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +11,6 @@ import 'package:finance/models/type_acc.dart';
 
 class Tontine extends StatefulWidget {
   final Type_acc tontine;
-
   const Tontine({
     Key key,
     this.tontine,

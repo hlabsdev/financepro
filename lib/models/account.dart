@@ -1,13 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
 
 import "type_acc.dart";
-
 part 'account.g.dart';
 
 @JsonSerializable()
 class Account {
-  // Account();
-
   Type_acc epargne;
   Type_acc tontine;
 

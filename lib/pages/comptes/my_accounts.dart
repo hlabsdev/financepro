@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance/pages/transactions/mes_transactions.dart';
 import 'package:finance/services/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -18,7 +19,6 @@ class MyAccounts extends StatefulWidget {
 class _MyAccountsState extends State<MyAccounts> {
   MyAppServices get service => GetIt.I<MyAppServices>();
 
-  var userData;
   ApiResponse<Account> _apiResponse;
   bool _isLoading;
   // Account compte;

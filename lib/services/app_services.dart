@@ -45,29 +45,55 @@ class MyAppServices {
             ));
   }
 
-  Future<ApiResponse<AgentClient>> getAgentClient() async {
+  Future<ApiResponse<Agent_client>> getAgentClient() async {
+    final user = json.decode(UserPreferences().client);
+    return http
+        .get(API + "client/agent/${user["id"]}", headers: headers)
+        .then((data) {
+      if (data.statusCode == 200) {
+        // final jsonData = json.decode(data.body);
+        final jsonData = jsonDecode(data.body);
+
+        final agentClient = Agent_client(
+            account: Type_acc.fromJson(jsonData["account"]),
+            agent: Client.fromJson(jsonData["agent"]));
+        return ApiResponse<Agent_client>(
+          data: agentClient,
+        );
+      }
+      return ApiResponse<Agent_client>(
+        error: true,
+        errorMessage: "Une erreur s'est produite!",
+      );
+    }).catchError((_) => ApiResponse<Agent_client>(
+          error: true,
+          errorMessage: "Une erreur s'est produite!",
+        ));
+  }
+
+  Future<ApiResponse<Client>> getAgent() async {
     final user = json.decode(UserPreferences().client);
     return http
         .get(API + "client/agent/${user["id"]}", headers: headers)
         .then((data) {
       if (data.statusCode == 200) {
         final jsonData = json.decode(data.body);
+        // final jsonData = jsonDecode(data.body);
 
-        final agentClient = AgentClient(
-            account: Type_acc.fromJson(jsonData["account"]),
-            agent: Client.fromJson(jsonData["agent"]));
-        return ApiResponse<AgentClient>(
+        final agentClient = Client.fromJson(jsonData["agent"]);
+        print(agentClient);
+        return ApiResponse<Client>(
           data: agentClient,
         );
       }
-      return ApiResponse<AgentClient>(
+      return ApiResponse<Client>(
         error: true,
-        errorMessage: "Une erreur s'est produite!",
+        errorMessage: "Une erreure s'est produite!",
       );
-    }).catchError((_) => ApiResponse<AgentClient>(
-              error: true,
-              errorMessage: "Une erreur s'est produite!",
-            ));
+    }).catchError((_) => ApiResponse<Client>(
+          error: true,
+          errorMessage: "Une erreur s'est produite!",
+        ));
   }
 
   /* ===== Tout ce qui concerne Account end ===== */

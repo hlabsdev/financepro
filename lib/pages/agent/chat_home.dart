@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:finance/api/api.dart';
 import 'package:finance/models/account.dart';
@@ -6,8 +8,10 @@ import 'package:finance/models/message.dart';
 import 'package:finance/services/app_services.dart';
 import 'package:finance/services/user_preferences.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 class ChatHome extends StatefulWidget {
   @override
@@ -19,6 +23,21 @@ class _ChatHomeState extends State<ChatHome> {
 
   MyAppServices get service => GetIt.I<MyAppServices>();
 
+  // final Completer<WebViewController> _controller = Completer<WebViewController>();
+
+  // static const kAndroidUserAgent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.94 Mobile Safari/537.36';
+
+  // String selectedUrl = 'https://flutter.io';
+
+// ignore: prefer_collection_literals
+//   final Set<JavascriptChannel> jsChannels = [
+//     JavascriptChannel(
+//         name: 'Print',
+//         onMessageReceived: (JavascriptMessage message) {
+//           print(message.message);
+//         }),
+//   ].toSet();
+
   var userData;
   ApiResponse<Account> _apiResponse;
   bool _isLoading;
@@ -28,6 +47,7 @@ class _ChatHomeState extends State<ChatHome> {
   void initState() {
     _fetchData(false);
     super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView(); else WebView.platform = SurfaceAndroidWebView();
   }
 
   _fetchData(bool getNew) async {
@@ -78,8 +98,64 @@ class _ChatHomeState extends State<ChatHome> {
   ];
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context){
+    /*return Scaffold(
+      appBar: AppBar(
+        title: Text('InAppWebView Example'),
+      ),
+      body: Expanded(
+        child: WebView(
+          initialUrl: 'https://flutter.dev/',
+          javascriptMode: JavascriptMode.unrestricted,
+        ),
+      ),
+    );*/
+
+    return WebviewScaffold(
+      url: 'https://financepro.proxymall.store/mfp-chat-message',
+      // javascriptChannels: jsChannels,
+      withJavascript: true,
+      allowFileURLs: true,
+      mediaPlaybackRequiresUserGesture: false,
+      appBar: AppBar(
+        title: const Text('Widget WebView'),
+      ),
+      withZoom: true,
+      withLocalStorage: true,
+      hidden: true,
+      initialChild: Container(
+        color: Colors.redAccent,
+        child: const Center(
+          child: Text('Waiting.....'),
+        ),
+      ),
+     /* bottomNavigationBar: BottomAppBar(
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                flutterWebViewPlugin.goBack();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.arrow_forward_ios),
+              onPressed: () {
+                flutterWebViewPlugin.goForward();
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.autorenew),
+              onPressed: () {
+                flutterWebViewPlugin.reload();
+              },
+            ),
+          ],
+        ),
+      ),
+    */);
+
+   /* return Scaffold(
       appBar: AppBar(
         centerTitle: false,
         actions: [
@@ -257,5 +333,5 @@ class _ChatHomeState extends State<ChatHome> {
         );
       }),
     );
-  }
+ */ }
 }
