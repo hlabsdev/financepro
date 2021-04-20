@@ -118,7 +118,7 @@ class _ChatHomeState extends State<ChatHome> {
       allowFileURLs: true,
       mediaPlaybackRequiresUserGesture: false,
       appBar: AppBar(
-        title: const Text('Widget WebView'),
+        title: const Text('Mon Agent'),
       ),
       withZoom: true,
       withLocalStorage: true,
@@ -126,7 +126,7 @@ class _ChatHomeState extends State<ChatHome> {
       initialChild: Container(
         color: Colors.redAccent,
         child: const Center(
-          child: Text('Waiting.....'),
+          child: Text('Chargement.....'),
         ),
       ),
      /* bottomNavigationBar: BottomAppBar(
