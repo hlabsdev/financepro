@@ -1,12 +1,12 @@
 # Finance App Made In Flutter
 
 
-#Installation
+# Installation
 flutter installation
 
 https://flutter.dev/docs/get-started/editor
 
-##the actuall version: 2.0.15
+## the actuall version: 2.0.15
 
 
 # Packages 
